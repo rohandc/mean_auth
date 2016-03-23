@@ -1,0 +1,156 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <base href="/register">
+    <meta charset="utf-8" />
+    <title>Register</title>
+
+
+</head>
+<body>
+  <div class="col-md-4">
+        <h1>
+            Register
+        </h1>
+        <div ng-show="iserror" class="alert alert-danger">{{error.err.message}}</div>
+        <form class="form" ng-submit="register()">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" class="form-control" name="username" ng-model="formData.username" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" class="form-control" name="password" ng-model="formData.password" required>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-default" ng-disabled="disabled">Register</button>
+            </div>
+        </form>
+    </div>
+    <!--
+
+    <form class="form-horizontal" ng-submit="register()">
+        <fieldset>
+            <div id="legend">
+                <legend class="">Register</legend>
+            </div>
+
+            <div class="control-group">
+        -->
+    <!-- Username -->
+    <!--  <label class="control-label" for="username">Username</label>
+          <div class="controls">
+              <input type="text" id="username" name="username" placeholder="" class="input-xlarge" ng-model="registerForm.username">
+              <p class="help-block">Username can contain any letters or numbers, without spaces</p>
+          </div>
+      </div>
+
+      <div class="control-group">
+    -->
+    <!-- E-mail -->
+    <!--
+                <label class="control-label" for="email">E-mail</label>
+                <div class="controls">
+                    <input type="text" id="email" name="email" placeholder="" class="input-xlarge" ng-model="registerForm.email">
+                    <p class="help-block">Please provide your E-mail</p>
+                </div>
+            </div>
+
+            <div class="control-group">
+        -->
+    <!-- Password-->
+    <!--
+                <label class="control-label" for="password">Password</label>
+                <div class="controls">
+                    <input type="password" id="password" name="password" placeholder="" ng-model="registerForm.password" class="input-xlarge">
+                    <p class="help-block">Password should be at least 4 characters</p>
+                </div>
+            </div>
+
+            <div class="control-group">
+             -->
+    <!-- Password -->
+    <!-- <label class="control-label" for="password_confirm">Password (Confirm)</label>
+          <div class="controls">
+              <input type="password" id="password_confirm" name="password_confirm" placeholder="" class="input-xlarge" ng-model='registerForm.password_verify'>
+              <p class="help-block">Please confirm password</p>
+          </div>
+      </div>
+
+      <div class="control-group">
+       -->
+    <!-- Button -->
+    <!--   <div class="controls">
+                        <button class="btn btn-success" ng-disabled="disabled">Register</button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+
+
+
+    <form name="myForm" class="form-horizontal" ng-submit="register()">
+        <fieldset>
+
+            <div id="legend">
+                <legend class="">Register</legend>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="email">Email</label>
+                <div class="controls">
+                    <input type="email" id="email" name="email" ng-model="formData.email" required />
+                    <span ng-show="myForm.email.$error.required && myForm.email.$dirty">required</span>
+                    <span ng-show="!myForm.email.$error.required && myForm.email.$error.email && myForm.email.$dirty">invalid email</span>
+                </div>
+            </div>
+            <br />
+
+            <div class="control-group">
+                <label class="control-label" for="email">Name</label>
+                <div class="controls">
+                    <input type="text" id="name" name="name" ng-model="formData.name" required />
+                    <span ng-show="myForm.name.$error.required && myForm.name.$dirty">required</span>
+                    <br />
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="username">Username</label>
+                <div class="controls">
+                    <input type="text" id="username" name="username" ng-model="formData.username" ng-minlength="5" ng-maxlength="20" ng-pattern="/^[A-z][A-z0-9]*$/" class="input-xlarge" required />
+                    <span ng-show="myForm.username.$error.required && myForm.username.$dirty">required</span>
+                    <span ng-show="!myForm.username.$error.minLength && !myForm.username.$error.maxLength && myForm.username.$error.pattern && myForm.username.$dirty">Must start with a letter, and contain letters &amp; numbers only.</span>
+                    <span ng-show="!myForm.username.$error.required && (myForm.username.$error.minlength || myForm.username.$error.maxlength) && myForm.username.$dirty">Username ust be between 5 and 20 characters.</span>
+                    <br />
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="password">Password</label>
+                <div class="controls">
+                    <input type="password" id="password" name="password" ng-model="formData.password" ng-minlength="8" ng-maxlength="20" ng-pattern="/(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z])/" class="input-xlarge" required />
+                     
+                    <span ng-show="myForm.password.$error.required && myForm.password.$dirty">required</span>
+                    <span ng-show="!myForm.password.$error.required && (myForm.password.$error.minlength || myForm.password.$error.maxlength) && myForm.password.$dirty">Passwords must be between 8 and 20 characters.</span>
+                    <span ng-show="!myForm.password.$error.required && !myForm.password.$error.minlength && !myForm.password.$error.maxlength && myForm.password.$error.pattern && myForm.password.$dirty">Must contain one lower &amp; uppercase letter, and one non-alpha character (a number or a symbol.)</span>
+                </div>
+            </div>
+            <br />
+
+            <div class="control-group">
+                <label class="control-label" for="password_c">Confirm Password</label>
+                <div class="controls">
+                    <input type="password" id="password_c" name="password_c" ng-model="formData.password_c" valid-password-c class="input-xlarge" required />
+                    <span ng-show="myForm.password_c.$error.required && myForm.password_c.$dirty">Please confirm your password.</span>
+                    <span ng-show="!myForm.password_c.$error.required && myForm.password_c.$error.noMatch && myForm.password.$dirty">Passwords do not match.</span>
+                </div>
+            </div>
+            <br />
+
+            <button type="submit" class="btn" ng-disabled="!myForm.$valid">Submit</button>
+        </fieldset>
+    </form>
+     -->
+</body>
+</html>

@@ -1,0 +1,311 @@
+<script type="text/javascript">
+
+    /*
+		// only people are allowed? how about storage?
+	*/
+
+    function postForm()
+    {
+
+        // error
+        var errMSG = "";
+
+        var title = document.getElementById( "title" );
+        var apt = document.getElementById( "apt" );
+        var street = document.getElementById( "street" );
+        var city = document.getElementById( "city" );
+        var postal = document.getElementById( "postal" );
+        var rentalType = document.getElementsByName( "rentalType" );
+        var durNum = document.getElementById( "durNum" );
+        var qty = document.getElementById( "qty" );
+        var description = document.getElementById( "description" );
+
+        /* *** validation *** */
+        // title
+        if ( title.value == null || title.value.length == 0 )
+        {
+            errMSG += "*You must type title.\n";
+        }
+
+
+        // location
+        /*
+			1. apt #
+			2. st address
+			3. city
+			4. province
+		*/
+        if ( apt.value.length == 0 || street.value.length == 0 ||
+			city.value.length == 0 || postal.value.length == 0 )
+        {
+            errMSG += "*Location is mandatory.\n";
+        }
+
+
+        // rentalType
+        var renTypeVal = false;
+
+        var i = 0;
+        while ( !renTypeVal && i < rentalType.length )
+        {
+            if ( rentalType[i].checked )
+            {
+                renTypeVal = true;
+            }
+            i++;
+        }
+
+        if ( !renTypeVal )
+        {
+            errMSG += "*You must choose rental type.\n";
+        }
+
+
+        // duration input(type=text)
+        if ( durNum === null || durNum.length === 0 )
+        {
+            errMSG += "*You must enter duration.\n";
+        }
+
+        // duration type(type=radio)
+
+
+        // qty
+        if ( qty === null || qty.length === 0 )
+        {
+            errMSG += "*You must enter # of people allowed.\n";
+        }
+        allnumeric( qty );
+        allnumeric( durNum );
+
+        // description
+        if ( description.value.length == 0 )
+        {
+            errMSG += "*You must enter description.";
+        }
+
+
+        /*
+			output
+		*/
+
+        if ( errMSG !== "" )
+        {
+            alert( errMSG );
+            return false;
+        }
+        else // data all good
+        {
+            alert( "posted." );
+            return true;
+        }
+
+    }// ends function postForm()
+
+
+
+
+    function clearAll()
+    {
+        document.getElementById( "postForm" ).reset();
+        window.scrollTo( 0, 0 ); // scroll to top
+    }
+
+
+    function enterType()
+    {
+        // visibiliity of other input when chosen 'other' rental type
+        document.getElementById( "otherInput" ).style.visibility = "visible";
+
+    }
+
+    // numeric validation
+    function allnumeric( inputtxt )
+    {
+        var numbers = /^[0-9]+$/;
+        if ( inputtxt.value.match( numbers ) )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+
+</script>
+
+<style>
+    * {
+        margin: 5px;
+        padding: 10px;
+    }
+
+    input[type="text"] {
+        border-color: #dcdcdc;
+        border-radius: 5px;
+    }
+
+        input[type="text"]:focus {
+            border-color: black;
+        }
+
+    #postForm {
+        margin: 0px;
+        padding: 0px;
+    }
+
+        #postForm h2 {
+            border-bottom: 1px solid black;
+            padding: 1%;
+        }
+
+        #postForm #title {
+            width: 500px;
+        }
+
+        #postForm #durNum {
+            width: 50px;
+            text-align: center;
+            float: left;
+        }
+
+        #postForm #qty {
+            width: 50px;
+            text-align: center;
+        }
+
+        #postForm #description {
+            width: 100%;
+            height: 500px;
+            resize: none;
+            border: 1px solid black;
+        }
+
+        #postForm #clearAll {
+            padding: 0px;
+            color: blue;
+            text-decoration: underline;
+            float: left;
+        }
+
+            #postForm #clearAll:hover {
+                color: red;
+                cursor: pointer;
+            }
+
+        #postForm #btnPost {
+            float: right;
+            background-color: black;
+            color: white;
+            width: 150px;
+            height: 100px;
+            border-radius: 15px;
+            font-size: 1.2em;
+        }
+
+            #postForm #btnPost:hover {
+                cursor: pointer;
+            }
+</style>
+
+
+
+<!-- postForm -->
+<form id="postForm">
+    <h2>New Post</h2>
+    <!--
+        1. Title
+        2. Location
+        3. Rental Type
+        4. Duration(Number[text], Type[radio])
+        5. Quantity
+        6. Description
+    -->
+
+    <table>
+
+        <p>* All information should be filled.</p>
+        <tr>
+            <td>Title</td>
+            <td><input type="text" name="title" id="title" placeholder="Title" /><br /></td>
+
+        </tr>
+
+        <tr>
+            <td>Location</td>
+            <td>
+                <input type="text" id="aptNum" name="location" placeholder="Apt #" />
+                <input type="text" id="street" name="location" placeholder="Street Address" />
+                <input type="text" id="city" name="location" placeholder="City" />
+                <input type="text" id="postal" name="location" placeholder="Postal Code" />
+            </td>
+        </tr>
+
+        <tr>
+            <td>Rental Type</td>
+            <td>
+                <!--
+                    Ther's could be relations between options.
+                    But not sure yet what to use between radio button and checkbox
+                -->
+                <input type="checkbox" name="rentalType" id="room" />Room
+                <input type="checkbox" name="rentalType" id="house" />House
+                <input type="checkbox" name="rentalType" id="apt" />Apartment
+                <input type="checkbox" name="rentalType" id="condo" />Condo
+                <input type="checkbox" name="rentalType" id="storage" />Storage
+                <input type="checkbox" name="rentalType" id="pool" />Pool
+                <input type="checkbox" name="rentalType" id="toilet" />Toilet
+                <input type="checkbox" name="rentalType" id="kitchen" />Kitchen
+                <input type="checkbox" name="rentalType" id="other" onClick="return enterType();" />Other
+                <input type="text" name="rentalType" id="otherInput" style="visibility:hidden;">
+            </td>
+        </tr>
+
+        <tr>
+            <td>Duration</td>
+            <td>
+                <input type="text" name="durNum" id="durNum" placeholder="" />
+                <br />
+                <input type="radio" name="durType" id="hour" value="hour" />hour(s)
+                <input type="radio" name="durType" id="day" value="day" />day(s)
+                <input type="radio" name="durType" id="month" value="month" />month(s)
+                <input type="radio" name="durType" id="year" value="year" />year(s)
+            </td>
+        </tr>
+
+        <tr>
+            <td># of people allowed</td>
+            <td><input name="qty" id="qty" type="text" placeholder="" /></td>
+        </tr>
+
+        <tr>
+            <!-- description -->
+            <td></td>
+            <td><textarea name="description" id="description" placeholder="Description" value=""></textarea></td>
+        </tr>
+
+        <tr>
+            <!-- clear, submit button -->
+            <td></td>
+            <td>
+                <p name="clearAll" id="clearAll" onClick="clearAll();">Clear all</p>
+                <input type="submit" id="btnPost" value="Post" onclick="return postForm();" />
+            </td>
+        </tr>
+
+
+    </table>
+
+
+</form>
+
+
+
+
+<!-- *******************
+    1. Duration?
+    2. Qty
+    3. Location API
+-->
