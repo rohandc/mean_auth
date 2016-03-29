@@ -1,12 +1,12 @@
 /*
--Authors:
--Date:
--Purpose:
+ -Authors:
+ -Date:
+ -Purpose:
 
-@param
-@
+ @param
+ @
 
-*/
+ */
 "use strict";
 //dependenciess
 var express = require('express'),
@@ -14,8 +14,11 @@ var express = require('express'),
     passport = require('passport'),
     User = require('../models/user.js'),//Model for User registeration
     Apartment = require('../models/apartment_info.js'),
-    apt = new Apartment()//Model for Apartment registeration
-    mongoose = require('mongoose');
+    apt = new Apartment(),//Model for Apartment registeration
+    mongoose = require('mongoose'),
+    Admin = require('../models/admin.js');
+
+
 //Define Middleware Using ROUTER from EXPRESS
 router.use('/', function (req, res, next) {
     // req.path will be the req.url with the /users prefix stripped
@@ -217,16 +220,15 @@ router.get('/getApt/:id', function (req, res) {
             images.forEach(function (image) {
 
                 custom.readfromDB(image, function (err, response) {
-                    if (err)
-                    {
+                    if (err) {
                         console.log(err);
                         return;
                     }
                     //apartment.picture=apartment.picture+response;
                     console.log(apartment);
-                   /* apartment.methods.addfile(response, function (resp) {
-                        console.log(resp);
-                    })*/
+                    /* apartment.methods.addfile(response, function (resp) {
+                     console.log(resp);
+                     })*/
 
                 })
 
@@ -237,10 +239,9 @@ router.get('/getApt/:id', function (req, res) {
 
 });
 
-router.post('/updateApt/:id',function(req,res)
-{
-    var id=req.params.id;
-    var formdata=req.body.data;
+router.post('/updateApt/:id', function (req, res) {
+    var id = req.params.id;
+    var formdata = req.body.data;
     apt.name = formdata.name;
     apt.apartment_no = formdata.apartment_no;
     apt.street_name = formdata.street_name;
@@ -256,27 +257,26 @@ router.post('/updateApt/:id',function(req,res)
     apt.description = formdata.description;
     apt.rank = formdata.rank;
 
-    Apartment.findById(id,function(err,apartment){
+    Apartment.findById(id, function (err, apartment) {
 
-        if(err) return next(err);
+        if (err) return next(err);
 
         // Render not found error
-        if(!apartment) {
+        if (!apartment) {
             return res.status(404).json({
                 message: 'Course with id ' + id + ' can not be found.'
             });
         }
 
         // Update the course model
-        apartment.update(formdata, function(error, apartment) {
-            if(error) return next(error);
+        apartment.update(formdata, function (error, apartment) {
+            if (error) return next(error);
 
             res.send(apartment);
         });
 
 
     })
-
 
 
 });
@@ -292,18 +292,22 @@ router.get('/search/city/:city/type/:type/duration/:duration_id/minprice/:minpri
         //     Apartment.find({city:req.params.city,price:{$gt:req.params.minprice, $lte:req.params.maxprice}, type:req.params.type},callback);
         // }
         // else {
-        Apartment.find({city:req.params.city, price:{$gt:req.params.minprice, $lte:req.params.maxprice}},function callback(err, apt) {
-           if(err)
+        Apartment.find({
+            city: req.params.city,
+            price: {$gt: req.params.minprice, $lte: req.params.maxprice}
+        }, function callback(err, apt) {
+            if (err)
                 console.log(err);
-                // res.send(err);
+            // res.send(err);
             // debugger;
             // console.log(apt);
 
-            res.send(apt); 
+            res.send(apt);
 
         });
 
     });
+
 
 router.get('/id/:_id',
     function (req, res) {
@@ -314,16 +318,48 @@ router.get('/id/:_id',
         //     Apartment.find({city:req.params.city,price:{$gt:req.params.minprice, $lte:req.params.maxprice}, type:req.params.type},callback);
         // }
         // else {
-        Apartment.find({"_id":req.params._id},{_id:0,apartment_no:1,street_name:1,city:1,postal_code:1,country:1,rental_type:1, author:1, price:1, duration:1, occupants_no:1,description:1,rank:1},function callback(err, apt) {
-           if(err)
+        Apartment.find({"_id": req.params._id}, {
+            _id: 0,
+            apartment_no: 1,
+            street_name: 1,
+            city: 1,
+            postal_code: 1,
+            country: 1,
+            rental_type: 1,
+            author: 1,
+            price: 1,
+            duration: 1,
+            occupants_no: 1,
+            description: 1,
+            rank: 1
+        }, function callback(err, apt) {
+            if (err)
                 console.log(err);
-                // res.send(err);
+            // res.send(err);
             // debugger;
             // console.log(apt);
 
-            res.send(post); 
+            res.send(post);
 
         });
 
     });
+
+//Routes for Admin
+
+router.post('/admin/register',function(req,res)
+{
+Admin.register(new Admin({admin_username:req.body.username},req.body.password,function(err,account){
+    if (err) {
+        return res.render('register', { account : account });
+    }
+
+    passport.authenticate('local')(req, res, function () {
+        res.redirect('/admin/login');
+    });
+
+}))
+});
+
+
 module.exports = router;

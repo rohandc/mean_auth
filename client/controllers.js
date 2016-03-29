@@ -937,3 +937,22 @@ myApp.directive('modalDialog', function () {
  }
  };
  });*/
+
+
+
+myApp.controller('adminLoginController',function(){
+
+
+
+});
+
+
+myApp.controller('adminRegisterController',['$scope','AdminService',function($scope,AdminService){
+
+    $scope.register=function()
+    {
+            AdminService.registerAdmin($scope.username,$scope.password1);
+    }
+
+
+}]);

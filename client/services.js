@@ -259,3 +259,36 @@ myApp.factory('ApartmentService', ['$q', '$http', function ($q, $http) {
 
 
 }])
+
+myApp.factory('AdminService',['$q','$http',function($q,$http)
+{
+
+    function  registerAdmin(username, password)
+    {
+        console.log("Inside Admin service register");
+        var deferred = $q.defer();
+
+        $http.post('/admin/register', {username: username, password: password})
+            .success(function (data, status) {
+                if (status === 200 && data.status) {
+                    deferred.resolve();
+                } else {
+                    deferred.reject();
+                }
+            })
+            .error(function (data) {
+                deferred.reject(data);
+            });
+
+        return deferred.promise;
+    }
+
+    return
+    {
+        registerAdmin:registerAdmin
+    }
+
+
+
+
+}])
