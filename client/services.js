@@ -128,7 +128,11 @@ myApp.factory('AuthService',
             });
         }]);
 
+<<<<<<< HEAD
 myApp.factory('ApartmentService', ['$q', '$http',function ($q, $http) {
+=======
+myApp.factory('ApartmentService', ['$q', '$http', function ($q, $http) {
+>>>>>>> c4f80b8d5ce9b216fe87a459a01475561a5b2cf2
 
     console.log('Inside Apartment Service Debugging');
 
@@ -258,6 +262,7 @@ myApp.factory('ApartmentService', ['$q', '$http',function ($q, $http) {
     );
 
 
+<<<<<<< HEAD
 }])
 
 myApp.factory('AdminService',['$q','$http', '$location',function($q,$http,$location)
@@ -316,4 +321,6 @@ myApp.factory('AdminService',['$q','$http', '$location',function($q,$http,$locat
 
 
 
+=======
+>>>>>>> c4f80b8d5ce9b216fe87a459a01475561a5b2cf2
 }])

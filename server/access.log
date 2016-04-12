@@ -1698,6 +1698,7 @@
 ::1 - - [21/Mar/2016:20:18:20 +0000] "POST /user/registerApt HTTP/1.1" 200 371 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36"
 ::1 - - [21/Mar/2016:20:18:20 +0000] "GET /user/getApt HTTP/1.1" 200 4476 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36"
 ::1 - - [21/Mar/2016:20:20:48 +0000] "GET /user/getApt HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36"
+<<<<<<< HEAD
 ::1 - - [28/Mar/2016:22:50:57 +0000] "GET /user/status HTTP/1.1" 500 42 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36"
 ::1 - - [28/Mar/2016:22:51:00 +0000] "GET /user/getApt HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36"
 ::1 - - [28/Mar/2016:22:51:01 +0000] "GET /user/status HTTP/1.1" 500 42 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36"
@@ -2117,3 +2118,5 @@
 ::1 - - [12/Apr/2016:16:23:25 +0000] "POST /user/admin/register HTTP/1.1" 200 10 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36"
 ::1 - - [12/Apr/2016:16:23:38 +0000] "POST /user/admin/register HTTP/1.1" 200 10 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36"
 ::1 - - [12/Apr/2016:16:24:44 +0000] "POST /user/admin/register HTTP/1.1" 200 10 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36"
+=======
+>>>>>>> c4f80b8d5ce9b216fe87a459a01475561a5b2cf2

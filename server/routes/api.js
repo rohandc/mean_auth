@@ -1,4 +1,5 @@
 /*
+
  -Authors:
  -Date:
  -Purpose:
@@ -7,6 +8,7 @@
  @
 
  */
+
 "use strict";
 //dependenciess
 var express = require('express'),
@@ -14,10 +16,10 @@ var express = require('express'),
     passport = require('passport'),
     User = require('../models/user.js'),//Model for User registeration
     Apartment = require('../models/apartment_info.js'),
+
     apt = new Apartment(),//Model for Apartment registeration
     mongoose = require('mongoose'),
     Admin = require('../models/admin.js');
-
 
 //Define Middleware Using ROUTER from EXPRESS
 router.use('/', function (req, res, next) {
@@ -32,6 +34,7 @@ router.post('/register', function (req, res) {
             return res.status(500).json({err: err})
 
         }
+
         passport.authenticate('user')(req, res, function () {
             return res.status(200).json({status: 'Registration successful!'})
         });
@@ -40,8 +43,7 @@ router.post('/register', function (req, res) {
 
 router.post('/login', function (req, res, next) {
 
-
-    passport.authenticate('user', function (err, user, info) {
+    passport.authenticate('local', function (err, user, info) {
         if (err) {
             return next(err)
         }
@@ -54,8 +56,9 @@ router.post('/login', function (req, res, next) {
             }
             res.status(200).json({status: 'Login successful!'})
         });
-    }
-    )(req, res, next);
+
+    })(req, res, next);
+
 });
 
 router.get('/logout', function (req, res) {
@@ -193,12 +196,6 @@ router.get('/getApt/:id', function (req, res) {
      })
      console.log(imageObject);
      })
-
-
-
-
-
-
      // res.send(apts);
      });*/
 
@@ -219,12 +216,15 @@ router.get('/getApt/:id', function (req, res) {
             images.forEach(function (image) {
 
                 custom.readfromDB(image, function (err, response) {
-                    if (err) {
+
+                    if (err)
+                    {
                         console.log(err);
                         return;
                     }
                     //apartment.picture=apartment.picture+response;
                     console.log(apartment);
+
                     /* apartment.methods.addfile(response, function (resp) {
                      console.log(resp);
                      })*/
@@ -238,9 +238,10 @@ router.get('/getApt/:id', function (req, res) {
 
 });
 
-router.post('/updateApt/:id', function (req, res) {
-    var id = req.params.id;
-    var formdata = req.body.data;
+router.post('/updateApt/:id',function(req,res)
+{
+    var id=req.params.id;
+    var formdata=req.body.data;
     apt.name = formdata.name;
     apt.apartment_no = formdata.apartment_no;
     apt.street_name = formdata.street_name;
@@ -256,20 +257,20 @@ router.post('/updateApt/:id', function (req, res) {
     apt.description = formdata.description;
     apt.rank = formdata.rank;
 
-    Apartment.findById(id, function (err, apartment) {
+    Apartment.findById(id,function(err,apartment){
 
-        if (err) return next(err);
+        if(err) return next(err);
 
         // Render not found error
-        if (!apartment) {
+        if(!apartment) {
             return res.status(404).json({
                 message: 'Course with id ' + id + ' can not be found.'
             });
         }
 
         // Update the course model
-        apartment.update(formdata, function (error, apartment) {
-            if (error) return next(error);
+        apartment.update(formdata, function(error, apartment) {
+            if(error) return next(error);
 
             res.send(apartment);
         });
@@ -291,6 +292,7 @@ router.get('/search/city/:city/type/:type/duration/:duration_id/minprice/:minpri
         //     Apartment.find({city:req.params.city,price:{$gt:req.params.minprice, $lte:req.params.maxprice}, type:req.params.type},callback);
         // }
         // else {
+
         Apartment.find({
             city: req.params.city,
             price: {$gt: req.params.minprice, $lte: req.params.maxprice}
@@ -302,6 +304,7 @@ router.get('/search/city/:city/type/:type/duration/:duration_id/minprice/:minpri
             // console.log(apt);
 
             res.send(apt);
+
 
         });
 
@@ -343,7 +346,6 @@ router.get('/id/:_id',
         });
 
     });
-
 //Routes for Admin
 
 
@@ -394,4 +396,5 @@ router.post('/admin/login', function (req, res, next) {
 });
 
 //console.log(router.stack);
+
 module.exports = router;

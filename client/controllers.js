@@ -937,6 +937,7 @@ myApp.directive('modalDialog', function () {
  }
  };
  });*/
+<<<<<<< HEAD
 
 
 
@@ -974,3 +975,5 @@ myApp.controller('adminListController',['$scope','AdminService',function($scope,
 }]);
 
 
+=======
+>>>>>>> c4f80b8d5ce9b216fe87a459a01475561a5b2cf2

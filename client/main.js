@@ -6,12 +6,22 @@ var myApp = angular.module('myApp', ['ngRoute','ui.bootstrap','ngMessages']);
 
 myApp.config(function ($routeProvider, $locationProvider) {
 
+<<<<<<< HEAD
     $routeProvider
     .when('/',
         { templateUrl: 'partials/index.html',
                  controller:'navbarController',
                  access: { restricted: false }
          })
+=======
+
+
+    $routeProvider
+    .when('/', { templateUrl: 'partials/index.html',
+                 controller:'navbarController',
+                 access: { restricted: false }
+                })
+>>>>>>> c4f80b8d5ce9b216fe87a459a01475561a5b2cf2
     .when('/login', {
         templateUrl: 'partials/login.html', 
         controller: 'loginController',
@@ -31,6 +41,7 @@ myApp.config(function ($routeProvider, $locationProvider) {
         templateUrl: 'partials/apartment_info.html',
         controller: 'apartmentController'
      })
+<<<<<<< HEAD
         .when('/admin/login',
             {
                 templateUrl: 'admin/admin_login.html',
@@ -47,6 +58,10 @@ myApp.config(function ($routeProvider, $locationProvider) {
             templateUrl: 'admin/admin_apartmentinfo.html',
             controller: 'adminListController'
         })
+=======
+    .when('/one', { template: '<h1>This is page one!</h1>' })
+    .when('/two', { template: '<h1>This is page two!</h1>' })
+>>>>>>> c4f80b8d5ce9b216fe87a459a01475561a5b2cf2
     .otherwise({ redirectTo: '/' });
 
 
