@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+</head>
+<body>
+    <div class="container" style="margin:0 auto;" ng-app="myApp">
+
+        <nav class="navbar" >
+            <h1>Rent_my_Space</h1>
+            <h1 ng-show="isloggedIn"> {{username}} </h1>
+            <ul>
+                <li ng-show="!isloggedIn"><a href="/#/login" id="logInBtn"><img src="images/signIn.png">Sign In</a></li>
+                <li ng-show="isloggedIn"><a href="/user/logout" id="logOutBtn"><img src="images/signIn.png">Sign Out</a></li>
+                <li ng-show="isloggedIn"><a href="/#/apartmentinfo" ><img width="60" height="50" src="http://www.clipartbest.com/cliparts/RiG/4xR/RiG4xR6iL.png">Enter Info</img></a></li>
+                <li ng-show="!isloggedIn"><a href="#"><img src="images/search.png">Search</a></li>
+                <li><a href="/#/"><img src="images/contact.png">Contact</a></li>
+
+            </ul>
+
+
+        </nav>
+        <header>
+            <img src="images/banner.jpg">
+        </header>
+        <main>
+
+            <section id="search">
+                <h1>Search for properties</h1>
+                <div class="row1">
+                    <input type="text" id="location" placeholder="Where are you looking for your space? Try a city or post id.">
+                </div>
+                <div class="row1">
+
+                    <select id="rentType">
+                        <option value="Type" disabled="disabled" selected="selected">Rental Type</option>
+                        <option value="House">House</option>
+                        <option value="Apartment">Apartment</option>
+                        <option value="Room">Room</option>
+                        <option value="Garage">Garage</option>
+                        <option value="Storage">Storage</option>
+                        </optgroup>
+                    </select>
+
+                    <select id="minPrice">
+                        <option>Min Price</option>
+                        <option value="0">0</option>
+                        <option value="100">100$</option>
+                        <option value="200">200$</option>
+                        <option value="300">300$</option>
+                        <option value="400">400$</option>
+                        <option value="500">500$</option>
+                        <option value="600">600$</option>
+                        <option value="700">700$</option>
+                        <option value="800">800$</option>
+                        <option value="900">900$</option>
+                        <option value="1000">1000$</option>
+                        <option value=">1000">>1000$</option>
+
+                    </select>
+
+
+                    <select id="maxPrice">
+                        <option>Max Price</option>
+                        <option value="0">0</option>
+                        <option value="100">100$</option>
+                        <option value="200">200$</option>
+                        <option value="300">300$</option>
+                        <option value="400">400$</option>
+                        <option value="500">500$</option>
+                        <option value="600">600$</option>
+                        <option value="700">700$</option>
+                        <option value="800">800$</option>
+                        <option value="900">900$</option>
+                        <option value="1000">1000$</option>
+                        <option value=">1000">>1000$</option>
+
+                    </select>
+
+
+
+                </div>
+
+                <div class="row1">
+                    <select id="duration">
+                        <option value="Type" disabled="disabled" selected="selected">Duration</option>
+
+                        <option value="<1hour">1 hour</option>
+                        <option value="<6hours"> 6 hours</option>
+                        <option value="1-7days">1-7 days</option>
+                        <option value=">week">Week</option>
+                        <option value=">month">Month</option>
+
+                    </select>
+
+                    <select id="rating">
+                        <option value="Type" disabled="disabled" selected="selected">Rank</option>
+                        <option value="1">1<</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">All</option>
+
+                    </select>
+
+                </div>
+                <div class="row1">
+                    <input type="button" value="Search" class="btnSearch" onclick="searchF();">
+
+                    <hr style="margin-top:40px;">
+                </div>
+
+            </section>
+            <section id="logIn">
+
+                <div id="sectionHeader">
+                    <h2>Sign In</h2>
+                    <img src="images/signIn.png" id="sectionSignImg">
+                </div>
+
+                <div id="insideShadow">
+                    <p>Don't have an account? <a href="#signUp" id="signUpBtn">Create one.</a></p>
+
+                    <div class="row1">Username:<input class="input" type="text" id="username"></div>
+                    <div class="row1">Password :<input type="text" class="input" id="password"></div>
+                    <a href="#" class="center">Forgot your password?</a><br>
+                    <input type="checkbox" class="center"> stay Sign in
+                    <div class="row1">
+                        <a href="/login" class="btnSearch2">Log In</a> 
+                        <!--<input type="button" class="btnSearch2" value="Log In" onclick="logIn();">-->
+                    </div>
+                    <hr>
+                    <h3>or with Social Media</h3>
+                    <a href="#" class="c"><img src="images/facebook.png" /></a><br>
+                    <a href="#" class="c"><img src="images/google.png" /></a><br>
+                    <a href="#" class="c"><img src="images/twitter.png" /></a><br>
+                    <br>
+
+
+
+
+
+
+                </div>
+            </section>
+
+            <section id="signUp">
+                <h2>Sign Up</h2>
+                <div class="row1">Username:<input class="input" type="text" id="usernameNew"></div>
+                <div class="row1">Password :<input class="input" type="text" id="passwordNew"></div>
+                <div class="row1">Repeat : <input class="input" style="margin-left:32px;" type="text" id="passwordNew2"></div>
+                <div class="row1"><a href="/register" class="btnSearch2">Register</a> </div> <!-- <input type="button" class="btnSearch2" value="Sign Up" ></div>onclick="signUp();"-->  
+                <div class="row1"><p id="output"></p></div>
+
+
+            </section>
+
+        </main>
+        <footer></footer>
+    </div>
+
+<link href='https://fonts.googleapis.com/css?family=Volkhov' rel='stylesheet' type='text/css'>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/js/lightbox-plus-jquery.min.js"></script>
+    <script src="https://cdn.rawgit.com/vast-engineering/jquery-popup-overlay/1.7.11/jquery.popupoverlay.js"></script>
+    <link href="./css/style.css" rel="stylesheet" />
+    <!--<script>
+
+        $( document ).ready( function ()
+        {
+            $( '#logInBtn' ).click( function ()
+            {
+                $( '#logIn' ).popup( {
+                    transition: 'all 0.1s',
+                    scrolllock: true // optional
+                } );
+                $( '#logIn' ).popup( 'show' );
+
+            } );
+        } );
+
+        $( document ).ready( function ()
+        {
+            $( '#signUpBtn' ).click( function ()
+            {
+
+                $( '#logIn' ).popup( 'hide' );
+                $( "#signUp" ).popup( 'toggle' );
+
+            } );
+
+        } );
+
+
+
+        function searchF()
+        {
+            var searchObj = {
+                "location": document.getElementById( "location" ).value,
+                "rentalType": document.getElementById( "rentType" ).value,
+                "minPrice": document.getElementById( "minPrice" ).value,
+                "maxPrice": document.getElementById( "maxPrice" ).value,
+                "duration": document.getElementById( "duration" ).value,
+                "rank": document.getElementById( "rating" ).value
+
+            }
+            /*  -------------------------------------check if it's working
+            alert(searchObj.location + " " +
+                 searchObj.rentalType+ " " +
+                 searchObj.minPrice+ " " +
+                 searchObj.maxPrice+ " " +
+                 searchObj.duration+ " " +
+                 searchObj.rank);
+            */
+        }
+
+        function signUp()
+        {
+
+            var username = document.getElementById( "usernameNew" ).value;
+            var passwordNew = document.getElementById( "passwordNew" ).value;
+            var passwordNew2 = document.getElementById( "passwordNew2" ).value;
+
+            if ( username.length > 2 && passwordNew == passwordNew2 )
+            {
+
+                alert( "Works" );
+                //----------------------------- place to create session.
+            } else
+            {
+                document.getElementById( "output" ).innerHTML = "Passwords are not the same or username is too short."
+            }
+
+
+
+        }
+
+    </script>-->
+</body>
+</html>

@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Login</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.4/yeti/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!--  <div class="col-md-4">
+        <h1>Login</h1>
+         <div ng-show="error" class="alert alert-danger"> {{errorMessage}}</div>
+         <form class="form" ng-submit="login()">
+             <div class="form-group">
+                 <label>Username</label>
+                 <input type="text" class="form-control" name="username" ng-model="loginForm.username" required>
+             </div>
+             <div class="form-group">
+                 <label>Password</label>
+                 <input type="password" class="form-control" name="password" ng-model="loginForm.password" required>
+             </div>
+             <div>
+                 <button type="submit" class="btn btn-default" ng-disabled="disabled">Login</button>
+             </div>
+         </form>
+     </div>-->
+        <div class="container">
+        <div class="row">
+            <div class="col-sm-6 col-md-4 col-md-offset-4">
+                <h1 class="text-center login-title">Sign in to continue</h1>
+                <div class="account-wall">
+                    <img class="profile-img" src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=120"
+                         alt="">
+
+
+                    <form class="form-signin" ng-submit="login()">
+
+                        <label>Username</label>
+                        <input type="text" class="form-control" placeholder="Email" required autofocus name="username" ng-model="loginForm.username">
+
+                        <label>Password</label>
+                        <input type="password" class="form-control" placeholder="Password" name="password" ng-model="loginForm.password" required>
+
+                        <br />
+                        <button type="submit" class="btn btn-default" ng-disabled="disabled">Sign in</button>
+
+                        <div class="col-md-offset-1">
+                            <label class="checkbox pull-left">
+                                <input type="checkbox" value="remember-me">
+                                Remember me
+                            </label>
+
+                            <br />
+                            <a href="#/register" class="new-account">Create an account </a>
+                        </div>
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>
