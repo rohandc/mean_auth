@@ -65,7 +65,7 @@ router.get('/logout', function (req, res) {
 
     //res.status(200).json({status: 'Bye!'})
     req.logout();
-    req.flash('Success message', 'Logout Successfull');
+    //req.flash('Success message', 'Logout Successfull');
     res.redirect('/');
 
 });

@@ -22,13 +22,9 @@ var express = require('express'),
     localStrategy = require('passport-local').Strategy,
     mongoose = require('mongoose'),
     multer = require('multer'),
-<<<<<<< HEAD
-    FacebookStrategy = require('passport-facebook').Strategy,
-//   raphael         = require('node-raphael'),
-=======
-    FacebookStrategy= require('passport-facebook').Strategy,
+ //FacebookStrategy= require('passport-facebook').Strategy,
  //   raphael         = require('node-raphael'),
->>>>>>> c4f80b8d5ce9b216fe87a459a01475561a5b2cf2
+
     storage = require('gridfs-storage-engine')(
         {
             database: 'mean-auth',
@@ -38,28 +34,16 @@ var express = require('express'),
     ),
     MongoStore = require('connect-mongo')(expressSession),
     custom = require('./Custom.js');
-<<<<<<< HEAD
-custom = new custom();
-custom.initializeMongoose(function (res) {
-});
-=======
     custom = new custom();
     custom.initializeMongoose(function (res) {
     });
->>>>>>> c4f80b8d5ce9b216fe87a459a01475561a5b2cf2
-
 //    mongoose.connect('mongodb://localhost/mean-auth');
-
 
 var app = express();
 
 //Multer test
 var handler = multer({
-<<<<<<< HEAD
-    dest: '../client/partials/images/uploads/',
-=======
     dest : '../client/partials/images/uploads/',
->>>>>>> c4f80b8d5ce9b216fe87a459a01475561a5b2cf2
     storage: storage,
     limits: {
         fileSize: 500000
@@ -98,10 +82,7 @@ app.use(handler.any('image'));
 
 // user schema/model
 var User = require('./models/user.js');
-<<<<<<< HEAD
 var Admin = require('./models/admin.js');
-=======
->>>>>>> c4f80b8d5ce9b216fe87a459a01475561a5b2cf2
 
 /*
  app.use('/',function (req, res, next) {
@@ -123,11 +104,8 @@ app.use(cookieParser());
 app.use(busboy({limits: {fileSize: 10 * 1024 * 1024}}));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-<<<<<<< HEAD
-app.use(bodyParser.urlencoded({extended: false}));
-=======
+
 app.use(bodyParser.urlencoded({ extended: false }));
->>>>>>> c4f80b8d5ce9b216fe87a459a01475561a5b2cf2
 app.use(cookieParser());
 //Maintaining Session using Mongoose Store
 app.use(expressSession({
@@ -139,7 +117,6 @@ app.use(expressSession({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
-<<<<<<< HEAD
 // configure passport for User
 
 passport.use("user",new localStrategy(function(username, password, done) {
@@ -244,12 +221,6 @@ passport.use(new localStrategy('admin',{
 passport.deserializeUser(Admin.deserializeUser());
  */
 
-=======
-// configure passport
-passport.use(new localStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
->>>>>>> c4f80b8d5ce9b216fe87a459a01475561a5b2cf2
 // routes middleware note place middleware before  route handler 
 // else middleware will not get executed if placed after a route
 // require routes

@@ -2120,3 +2120,6 @@
 ::1 - - [12/Apr/2016:16:24:44 +0000] "POST /user/admin/register HTTP/1.1" 200 10 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36"
 =======
 >>>>>>> c4f80b8d5ce9b216fe87a459a01475561a5b2cf2
+::1 - - [13/Apr/2016:17:46:52 +0000] "GET /user/status HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36"
+::1 - - [13/Apr/2016:17:46:54 +0000] "GET /user/logout HTTP/1.1" 500 1773 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36"
+::1 - - [13/Apr/2016:17:46:58 +0000] "GET /user/status HTTP/1.1" 500 42 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36"
