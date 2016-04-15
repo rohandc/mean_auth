@@ -43,6 +43,10 @@ myApp.config(function ($routeProvider, $locationProvider) {
                 controller: 'adminRegisterController'
 
             })
+        .when('/admin/index',{
+            templateUrl: 'admin/admin_apartmentinfo.html',
+            controller: 'adminListController'
+        })
     .otherwise({ redirectTo: '/' });
 
 

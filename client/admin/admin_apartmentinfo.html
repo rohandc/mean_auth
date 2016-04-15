@@ -1,0 +1,21 @@
+<div clas="panel panel-primary ">
+    <div class=" col-md-6">
+
+        <table class="table table-striped">
+            <tr ng-repeat="apt in apartments">
+                <!--<td>{{apt._id}}</td>-->
+                <td>{{apt.name}}</td>
+                <td>{{apt.apartment_no}}</td>
+
+                <td>
+                    <button class="btn btn-success" ng-click="editapt(apt._id)">&#9998;</button>
+                </td>
+                <td>
+                    <button class="btn btn-danger" ng-click="deleteapt(apt._id)">&times;</button>
+                </td>
+
+            </tr>
+        </table>
+
+    </div>
+</div>

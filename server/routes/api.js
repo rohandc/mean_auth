@@ -32,14 +32,16 @@ router.post('/register', function (req, res) {
             return res.status(500).json({err: err})
 
         }
-        passport.authenticate('local')(req, res, function () {
+        passport.authenticate('user')(req, res, function () {
             return res.status(200).json({status: 'Registration successful!'})
         });
     });
 });
 
 router.post('/login', function (req, res, next) {
-    passport.authenticate('local', function (err, user, info) {
+
+
+    passport.authenticate('user', function (err, user, info) {
         if (err) {
             return next(err)
         }
@@ -52,7 +54,8 @@ router.post('/login', function (req, res, next) {
             }
             res.status(200).json({status: 'Login successful!'})
         });
-    })(req, res, next);
+    }
+    )(req, res, next);
 });
 
 router.get('/logout', function (req, res) {
@@ -172,10 +175,6 @@ router.get('/getApt/:id', function (req, res) {
     /*  Apartment.findOne({_id: req.params.id})
      .populate("aptID")
      .exec(
-
-
-
-
      function (err, apts) {
      debugger;
      if (err) {
@@ -194,12 +193,6 @@ router.get('/getApt/:id', function (req, res) {
      })
      console.log(imageObject);
      })
-
-
-
-
-
-
      // res.send(apts);
      });*/
 
@@ -347,19 +340,52 @@ router.get('/id/:_id',
 
 //Routes for Admin
 
-router.post('/admin/register',function(req,res)
-{
-Admin.register(new Admin({admin_username:req.body.username},req.body.password,function(err,account){
-    if (err) {
-        return res.render('register', { account : account });
-    }
 
-    passport.authenticate('local')(req, res, function () {
-        res.redirect('/admin/login');
+router.post('/admin/register', function (req, res,next)
+{
+
+    if(req.user)
+    {
+        req.logOut();
+    }
+    Admin.register(new Admin({username:req.body.username}), req.body.password, function (err, account) {
+        if (err) {
+            return res.status(500).json({err: err})
+        }
+
+
+        passport.authenticate('admin')(req, res, function () {
+
+        });
     });
 
-}))
+
+    res.status(200).json("Redirect");
+
+
+
+
 });
 
 
+router.post('/admin/login', function (req, res, next) {
+
+    passport.authenticate('admin', function (err, user, info) {
+            if (err) {
+                return next(err)
+            }
+            if (!user) {
+                return res.status(401).json({err: info})
+            }
+            req.logIn(user, function (err) {
+                if (err) {
+                    return res.status(500).json({err: 'Could not log in user'})
+                }
+                res.status(200).json("success");
+            });
+        }
+    )(req, res, next);
+});
+
+//console.log(router.stack);
 module.exports = router;

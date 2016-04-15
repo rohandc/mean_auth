@@ -1,4 +1,4 @@
-// user model
+// Admin model
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     passportLocalMongoose = require('passport-local-mongoose');
@@ -6,12 +6,11 @@ var mongoose = require('mongoose'),
 
 var Admin = new Schema(
     {
-        admin_username: String,
-        password:String,
-        email: {type:String,lowercase:true}
+        admin_username:String,
+        password:String
     });
 
 
 
 Admin.plugin(passportLocalMongoose);
-module.exports = mongoose.model('admin', Admin);
+module.exports = mongoose.model('admins', Admin);

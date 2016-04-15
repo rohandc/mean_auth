@@ -128,7 +128,7 @@ myApp.factory('AuthService',
             });
         }]);
 
-myApp.factory('ApartmentService', ['$q', '$http', function ($q, $http) {
+myApp.factory('ApartmentService', ['$q', '$http',function ($q, $http) {
 
     console.log('Inside Apartment Service Debugging');
 
@@ -260,7 +260,7 @@ myApp.factory('ApartmentService', ['$q', '$http', function ($q, $http) {
 
 }])
 
-myApp.factory('AdminService',['$q','$http',function($q,$http)
+myApp.factory('AdminService',['$q','$http', '$location',function($q,$http,$location)
 {
 
     function  registerAdmin(username, password)
@@ -268,10 +268,11 @@ myApp.factory('AdminService',['$q','$http',function($q,$http)
         console.log("Inside Admin service register");
         var deferred = $q.defer();
 
-        $http.post('/admin/register', {username: username, password: password})
-            .success(function (data, status) {
-                if (status === 200 && data.status) {
-                    deferred.resolve();
+        $http.post('user/admin/register', {username: username, password: password})
+            .success(function (data) {
+                if (data=="Redirect") {
+                    $location.path('/admin/login');
+                   // deferred.resolve(data);
                 } else {
                     deferred.reject();
                 }
@@ -283,10 +284,33 @@ myApp.factory('AdminService',['$q','$http',function($q,$http)
         return deferred.promise;
     }
 
-    return
+
+    function  loginAdmin(username, password)
     {
-        registerAdmin:registerAdmin
+        console.log("Inside Admin service login");
+        var deferred = $q.defer();
+
+        $http.post('user/admin/login', {username: username, password: password})
+            .success(function (data) {
+                if (data=="success") {
+                    $location.path('/admin/index');
+                } else {
+                    deferred.reject(data);
+                }
+            })
+            .error(function (data) {
+                deferred.reject(data);
+            });
+
+        return deferred.promise;
     }
+
+
+    return(
+    {
+        registerAdmin:registerAdmin,
+        loginAdmin:loginAdmin
+    });
 
 
 
