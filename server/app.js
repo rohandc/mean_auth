@@ -127,8 +127,6 @@ passport.use("user",new localStrategy(function(username, password, done) {
 
     });
 }));
-
-
 passport.use("admin",new localStrategy(function(username, password, done) {
     Admin.findOne({ username: username }, function(err, user) {
 

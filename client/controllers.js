@@ -963,9 +963,87 @@ myApp.controller('adminRegisterController',['$scope','AdminService',function($sc
 }]);
 
 
-myApp.controller('adminListController',['$scope','AdminService',function($scope,AdminService){
+myApp.controller('adminListController',['$scope','AdminService','ApartmentService','$uibModal',function($scope,AdminService,ApartmentService,$uibModal){
+
+        AdminService.getApartments().
+        then(function(data){
+            $scope.apartments=data;
+        });
 
 
+    $scope.editapt = function (id) {
+
+        //Modal Start
+
+        //Fetch edit Data
+        //Change later on to AdminService from here on
+        ApartmentService.findById(id)
+            .then(function (response) {
+
+                var modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: '/partials/templates/modal.html',
+                    controller: 'ModalInstanceCtrl',
+                    size: 'lg',
+                    resolve: {
+                        apt: function () {
+                            return response
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+                    $scope.selected = selectedItem;
+                }, function () {
+                    console.log('Modal dismissed at: ' + new Date());
+                });
+
+            });
+
+
+        $scope.toggleAnimation = function () {
+            $scope.animationsEnabled = !$scope.animationsEnabled;
+        };
+
+        //Modal End
+
+
+
+
+    }
+
+
+    $scope.deleteapt = function (id) {
+        swal(
+            {
+                title: "Are you sure?",
+                text: "You will not be able to recover this file!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "No, cancel plz!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+            function (isConfirm) {
+                if (isConfirm) {
+                    ApartmentService.deleteApartmentbyId(id)
+                        .then(function (response) {
+                            swal({title: response.message, type: "success"}, function (isConfirm) {
+                                $scope.initialize();
+                            });
+
+                        });
+                }
+                else {
+                    swal("Cancelled", "Your File is safe :)", "error");
+                }
+
+            });
+
+
+    }
 
 
 }]);

@@ -58,8 +58,8 @@ router.post('/login', function (req, res, next) {
     )(req, res, next);
 });
 
-router.get('/logout', function (req, res) {
-
+router.get('/logout', function (req, res)
+{
     //res.status(200).json({status: 'Bye!'})
     req.logout();
     req.flash('Success message', 'Logout Successfull');
@@ -209,7 +209,7 @@ router.get('/getApt/:id', function (req, res) {
         })
         .on ("close", function () {
 
-            var images = apartment.picture.split(",");
+       /*     var images = apartment.picture.split(",");
             images.forEach(function (image) {
 
                 custom.readfromDB(image, function (err, response) {
@@ -219,13 +219,13 @@ router.get('/getApt/:id', function (req, res) {
                     }
                     //apartment.picture=apartment.picture+response;
                     console.log(apartment);
-                    /* apartment.methods.addfile(response, function (resp) {
+                    /!* apartment.methods.addfile(response, function (resp) {
                      console.log(resp);
-                     })*/
+                     })*!/
 
                 })
 
-            })
+            })*/
             res.send(apartment);
         });
 
@@ -385,6 +385,17 @@ router.post('/admin/login', function (req, res, next) {
             });
         }
     )(req, res, next);
+});
+
+router.get('/admin/apartments',function(req,res,next)
+{
+    Apartment.find(function(err,apt){
+
+        if(err)
+        console.log(err);
+
+        res.send(apt);
+    })
 });
 
 //console.log(router.stack);

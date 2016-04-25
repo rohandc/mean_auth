@@ -305,11 +305,34 @@ myApp.factory('AdminService',['$q','$http', '$location',function($q,$http,$locat
         return deferred.promise;
     }
 
+    function getApartments()
+    {
+        var promise=$q.defer();
+
+        $http.get('user/admin/apartments')
+            .success(function (response, status) {
+
+                if (status != 200)
+                    promise.reject(response);
+
+
+                promise.resolve(response);
+
+
+            })
+            .error(function (response) {
+                promise.reject(response);
+            });
+
+        // console.log(promise.promise);
+        return promise.promise;
+    }
 
     return(
     {
         registerAdmin:registerAdmin,
-        loginAdmin:loginAdmin
+        loginAdmin:loginAdmin,
+        getApartments:getApartments
     });
 
 
