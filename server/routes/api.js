@@ -42,24 +42,23 @@ router.post('/login', function (req, res, next) {
 
 
     passport.authenticate('user', function (err, user, info) {
-        if (err) {
-            return next(err)
-        }
-        if (!user) {
-            return res.status(401).json({err: info})
-        }
-        req.logIn(user, function (err) {
             if (err) {
-                return res.status(500).json({err: 'Could not log in user'})
+                return next(err)
             }
-            res.status(200).json({status: 'Login successful!'})
-        });
-    }
+            if (!user) {
+                return res.status(401).json({err: info})
+            }
+            req.logIn(user, function (err) {
+                if (err) {
+                    return res.status(500).json({err: 'Could not log in user'})
+                }
+                res.status(200).json({status: 'Login successful!'})
+            });
+        }
     )(req, res, next);
 });
 
-router.get('/logout', function (req, res)
-{
+router.get('/logout', function (req, res) {
     //res.status(200).json({status: 'Bye!'})
     req.logout();
     req.flash('Success message', 'Logout Successfull');
@@ -81,6 +80,46 @@ router.get('/status', function (req, res) {
     }
 });
 
+
+router.get('/current_user', function (req, res) {
+    if (req.user) {
+        User.findById(req.user.id, function (err, user) {
+            if (err)
+                console.log(err);
+
+            res.status(200).send(user);
+        })
+    }
+
+
+});
+
+
+//Multer test
+var multer = require('multer');
+var storage = multer.diskStorage({
+    destination: './client/partials/images/uploads/'
+    /*,
+     filename: function (filename,file,callback) {
+     callback(null,filename.replace(/\W+/g, '-').toLowerCase() + Date.now()+file.mimetype);
+     }*/
+});
+var upload = multer({storage: storage}).any('profile');
+
+router.post('/profileUpdate', function (req, res) {
+
+    upload(req, res, function (err) {
+
+        if (err) {
+            return res.end("Error uploading file.");
+        }
+        res.end("File is uploaded");
+    });
+
+});
+
+
+//Formidable end
 //End of Routes
 //Routes for Aparatments
 
@@ -209,23 +248,23 @@ router.get('/getApt/:id', function (req, res) {
         })
         .on ("close", function () {
 
-       /*     var images = apartment.picture.split(",");
-            images.forEach(function (image) {
+            /*     var images = apartment.picture.split(",");
+             images.forEach(function (image) {
 
-                custom.readfromDB(image, function (err, response) {
-                    if (err) {
-                        console.log(err);
-                        return;
-                    }
-                    //apartment.picture=apartment.picture+response;
-                    console.log(apartment);
-                    /!* apartment.methods.addfile(response, function (resp) {
-                     console.log(resp);
-                     })*!/
+             custom.readfromDB(image, function (err, response) {
+             if (err) {
+             console.log(err);
+             return;
+             }
+             //apartment.picture=apartment.picture+response;
+             console.log(apartment);
+             /!* apartment.methods.addfile(response, function (resp) {
+             console.log(resp);
+             })*!/
 
-                })
+             })
 
-            })*/
+             })*/
             res.send(apartment);
         });
 
@@ -341,14 +380,12 @@ router.get('/id/:_id',
 //Routes for Admin
 
 
-router.post('/admin/register', function (req, res,next)
-{
+router.post('/admin/register', function (req, res, next) {
 
-    if(req.user)
-    {
+    if (req.user) {
         req.logOut();
     }
-    Admin.register(new Admin({username:req.body.username}), req.body.password, function (err, account) {
+    Admin.register(new Admin({username: req.body.username}), req.body.password, function (err, account) {
         if (err) {
             return res.status(500).json({err: err})
         }
@@ -361,8 +398,6 @@ router.post('/admin/register', function (req, res,next)
 
 
     res.status(200).json("Redirect");
-
-
 
 
 });
@@ -387,16 +422,16 @@ router.post('/admin/login', function (req, res, next) {
     )(req, res, next);
 });
 
-router.get('/admin/apartments',function(req,res,next)
-{
-    Apartment.find(function(err,apt){
+router.get('/admin/apartments', function (req, res, next) {
+    Apartment.find(function (err, apt) {
 
-        if(err)
-        console.log(err);
+        if (err)
+            console.log(err);
 
         res.send(apt);
     })
 });
+
 
 //console.log(router.stack);
 module.exports = router;

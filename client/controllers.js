@@ -122,13 +122,26 @@ myApp.controller('navbarController', ['$scope', '$location', 'AuthService',
         });
     }]);
 
-myApp.controller('apartmentController', ['$scope', 'ApartmentService', '$uibModal', '$log',
-    function ($scope, ApartmentService, $uibModal, $log) {
+myApp.controller('apartmentController', ['$scope', 'ApartmentService', 'UploadService', '$uibModal', '$log', '$anchorScroll', '$location', '$rootScope',
+    function ($scope, ApartmentService, UploadService, $uibModal, $log, $anchorScroll, $location, $rootScope) {
+        //SPA scrolling to different location
+        $scope.scrollTo = function (id) {
+            $location.hash(id);
+            $anchorScroll();
+        }
+
         //Get Part of Apartments
         $scope.initialize = function () {
+            //Initialize Apartments
             ApartmentService.getApartments()
                 .then(function (response) {
                     $scope.apartments = response;
+                });
+
+            //Initialize User
+            ApartmentService.getcurrentUser()
+                .then(function (response) {
+                    $scope.profile = response;
                 });
 
         }
@@ -161,7 +174,6 @@ myApp.controller('apartmentController', ['$scope', 'ApartmentService', '$uibModa
 
             ApartmentService.findById(id)
                 .then(function (response) {
-
                     var modalInstance = $uibModal.open({
                         animation: true,
                         templateUrl: '/partials/templates/modal.html',
@@ -179,7 +191,6 @@ myApp.controller('apartmentController', ['$scope', 'ApartmentService', '$uibModa
                     }, function () {
                         $log.info('Modal dismissed at: ' + new Date());
                     });
-
                 });
 
 
@@ -188,7 +199,6 @@ myApp.controller('apartmentController', ['$scope', 'ApartmentService', '$uibModa
             };
 
             //Modal End
-
 
         }
 
@@ -568,10 +578,64 @@ myApp.controller('apartmentController', ['$scope', 'ApartmentService', '$uibModa
         }
 
         $scope.$on("updateApartment", function () {
-            $scope.reset();
+
             $scope.initialize();
+            console.log($scope);
+            $scope.apartment.name = "";
+            $scope.apartment.apartment_no = "";
+            $scope.apartment.street_name = "";
+            $scope.apartment.city = "";
+            $scope.apartment.postal_code = "";
+            $scope.apartment.country = "  ";
+            $scope.apartment.rental_type = "";
+            $scope.apartment.author = "";
+            $scope.apartment.duration = "";
+            $scope.apartment.occupants_no = "";
+            $scope.apartment.$setPristine();
+            $scope.apartment.$setUntouched();
+
         });
 
+        //Angular file upload for profile picture
+
+        $scope.uploadComplete = function () {
+            var data = new FormData();
+            data.username = $scope.profile.username;
+            data.email = $scope.profile.email;
+            data.first = $scope.profile.first_name;
+            data.last = $scope.profile.last_name;
+            data.gender = $scope.profile.gender;
+            data.contact = $scope.profile.contact;
+
+            UploadService.uploadfile($scope.files, data, '/user/profileUpdate',
+                function (msg) // success
+                {
+                    console.log('uploaded');
+                },
+                function (msg) // error
+                {
+                    console.log('error');
+                });
+        }
+
+        $scope.uploadedFile = function (element) {
+            $scope.$apply(function ($scope) {
+                $scope.files = element.files;
+            });
+        }
+
+        //$scope.onSelectFile = function ($files) {
+        //    for (var i = 0; i < $files.length; i++) {
+        //        var $file = $files[i];
+        //        $upload.upload({
+        //                url: 'api/HomeControler/upload',
+        //                file: $file
+        //            })
+        //            .then(function (data, status, headers, config) {
+        //                alert('file is uploaded successfully');
+        //            });
+        //    }
+        //}
 
     }]);
 
@@ -849,13 +913,12 @@ myApp.controller('ModalInstanceCtrl', function (ApartmentService, $rootScope, $s
         editdata.description = "";
         editdata.rank = 7;
 
-        ApartmentService.updateApartment($scope.apt._id, editdata).then(function (success) {
-
+        ApartmentService.updateApartment($scope.apt._id, editdata)
+            .then(function (success) {
             $rootScope.$broadcast('updateApartment');
-
-
+                $uibModalInstance.close();
         });
-        $uibModalInstance.close();
+
 
     };
 

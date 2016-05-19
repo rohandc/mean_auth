@@ -7,9 +7,9 @@
  @param
  @
  */
-
 // dependencies
 var express = require('express'),
+    app = express(),
     logger = require('morgan'),
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
@@ -22,8 +22,6 @@ var express = require('express'),
     localStrategy = require('passport-local').Strategy,
     mongoose = require('mongoose'),
     multer = require('multer'),
-    FacebookStrategy = require('passport-facebook').Strategy,
-//   raphael         = require('node-raphael'),
     storage = require('gridfs-storage-engine')(
         {
             database: 'mean-auth',
@@ -37,15 +35,11 @@ custom = new custom();
 custom.initializeMongoose(function (res) {
 });
 
-//    mongoose.connect('mongodb://localhost/mean-auth');
-
-
-var app = express();
 
 //Multer test
 var handler = multer({
-    dest: '../client/partials/images/uploads/',
-    storage: storage,
+    // dest: '/client/partials/images/uploads/',
+    //storage: storage,
     limits: {
         fileSize: 500000
     },
@@ -78,36 +72,22 @@ var handler = multer({
      }
      }*/
 });
-
-app.use(handler.any('image'));
+//app.use(handler.any('image'));
 
 // user schema/model
 var User = require('./models/user.js');
 var Admin = require('./models/admin.js');
-
-/*
- app.use('/',function (req, res, next) {
- // req.path will be the req.url with the /users prefix stripped
- console.log("Inside APP_JS Logger: "+req.path );
- next();
- });
- */
-
-// define middleware
 app.use(express.static(path.join(__dirname, '../client')));
 app.use(express.static(path.join(__dirname, '../client/partials/')));
 //Provide Access to Directories else 404 error
 var accessLogStream = fs.createWriteStream(__dirname + '/access.log', {flags: 'a'})
 app.use(logger('combined', {stream: accessLogStream}));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(busboy({limits: {fileSize: 10 * 1024 * 1024}}));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
-//Maintaining Session using Mongoose Store
 app.use(expressSession({
     secret: 'keyboard cat',
     resave: false,
@@ -119,16 +99,16 @@ app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 // configure passport for User
 
-passport.use("user",new localStrategy(function(username, password, done) {
-    User.findOne({ username: username }, function(err, user) {
+passport.use("user", new localStrategy(function (username, password, done) {
+    User.findOne({username: username}, function (err, user) {
         if (!err && user && User.authenticate(password)) {
             return done(null, user);
         }
 
     });
 }));
-passport.use("admin",new localStrategy(function(username, password, done) {
-    Admin.findOne({ username: username }, function(err, user) {
+passport.use("admin", new localStrategy(function (username, password, done) {
+    Admin.findOne({username: username}, function (err, user) {
 
         if (!err && user && Admin.authenticate(password)) {
             return done(null, user);
@@ -144,81 +124,6 @@ passport.serializeUser(Admin.serializeUser());
 passport.deserializeUser(Admin.deserializeUser());
 
 
-/*
-passport.use('local',new localStrategy(function(username, password, done) {
-   User.findOne({ username : username }, function(err, user) {
-        // first method succeeded?
-        debugger;
-        if (!err && user && user.authenticate(password)) {
-             done(null, user);
-        }
-
-        // no, try second method:
-        Admin.findOne({username:username }, function(err, user) {
-            // second method succeeded?
-            debugger;
-            if (! err && user && user.authenticate(password)) {
-                done(null, user);
-            }
-            // fail!
-     done(new Error('invalid user or password'));
-        });
-    });
-
-}));
-
-passport.serializeUser(function(modelname,user,done) {
-    debugger;
-    if (modelname=="User")
-    {
-        passport.serializeUser(User.serializeUser());
-        done(null,user);
-
-    } else if (modelname=="Admin")
-    {
-        passport.serializeUser(Admin.serializeUser());
-        done(null,user);
-    }
-});
-
-
-passport.deserializeUser(function(modelname,user,done) {
-    if (modelname=="User")
-    {
-        passport.deserializeUser(User.deserializeUser());
-        done(null,user);
-
-    } else if (modelname=="Admin")
-    {
-        passport.deserializeUser(Admin.deserializeUser());
-        done(null,user);
-    }
-});*/
-
-/*
-passport.use(new localStrategy('local',User.authenticate()));
-passport.deserializeUser(User.deserializeUser());
-configure passport for Admin
-var authStrategy = new AdminlocalStrategy('admin', {
-    usernameField: 'admin_username',
-    passwordField: 'password',
-    passReqToCallback: true
-}, function (admin_username, password, done) {
-    Admin.authenticate(admin_username, password, function (error, user)
-    {
-        done(error, user, error ? {message: error.message} : null);
-    });
-});
- passport.use(authStrategy);
-passport.use(new localStrategy('admin',{
- usernameField: 'admin_username',
- passwordField: 'password'
- },Admin.authenticate()));
-
-//passport.serializeUser(Admin.serializeUser());
-passport.deserializeUser(Admin.deserializeUser());
- */
-
 // routes middleware note place middleware before  route handler 
 // else middleware will not get executed if placed after a route
 // require routes
@@ -231,7 +136,7 @@ app.get('/', function (req, res) {
 });
 // error handlers
 app.use(function (req, res, next) {
-    var err = new Error('Not Found');
+    var err = new Error(req.url + 'Not Found');
     err.status = 404;
     next(err);
 });
@@ -243,5 +148,6 @@ app.use(function (err, req, res) {
         error: {}
     }));
 });
-//module.exports.gfs=gfs;
+
+
 module.exports = app;

@@ -1,311 +1,530 @@
+<script type="text/javascript">
+    $(document).ready(function () {
+        /* This code is executed after the DOM has been completely loaded */
+
+        $('nav a,footer a.up').click(function (e) {
+
+            // If a link has been clicked, scroll the page to the link's hash target:
+
+            $.scrollTo(this.hash || 0, 1500);
+            e.preventDefault();
+        });
+
+        $("#menu-toggle").click(function (e) {
+            e.preventDefault();
+            $("#wrapper").toggleClass("active");
+        });
+
+    });
+
+</script>
+
 <body>
-<!--<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">-->
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" rel="stylesheet"/>
-<div class="modal-body row" style="margin:0 auto;">
-    <div class="col-md-6">
-        <form enctype="multipart/form-data" name="apartment" ng-submit="addApartment()" novalidate="">
-            <!--apartment.$valid &&-->
-            <br>
+<link href="css/apartmentinfo.css" rel="stylesheet"/>
 
-            <div class="panel panel-primary">
+<div id="wrapper" class="active">
+    <!-- Sidebar -->
+    <div id="sidebar-wrapper">
+        <ul id="sidebar_menu" class="sidebar-nav">
+            <li class="sidebar-brand">
+                <a id="menu-toggle" href="#"> Menu<span id="main_icon" class="glyphicon glyphicon-align-justify"></span></a>
+            </li>
+        </ul>
+        <ul class="sidebar-nav" id="sidebar">
+            <li><a ng-click="scrollTo('list')"> View List<span class="glyphicon glyphicon-link"></span></a></li>
+            <li><a ng-click="scrollTo('edit')"> Add New <span class="glyphicon glyphicon-link"></span></a></li>
+            <li><a ng-click="scrollTo('view_profile')"> View Profile<span class="glyphicon glyphicon-link"></span></a>
+            </li>
+            <li><a ng-click="scrollTo('edit_profile')"> Edit Profile<span class="glyphicon glyphicon-link"></span></a>
+            </li>
+        </ul>
+    </div>
+    <!-- Page content -->
+    <div id="page-content-wrapper">
+        <!-- Keep all page content within the page-content inset div! -->
+        <div class="page-content inset">
+            <div class="modal-body row" style="margin:0 auto;">
+                <section id="list">
+                    <div class=" col-md-12">
 
-                <div class="panel-heading">
-                    <h3 class="panel-title">Application Form</h3>
+                        <table class="table table-striped">
+                            <tr ng-repeat="apt in apartments">
+                                <!--<td>{{apt._id}}</td>-->
+                                <td>{{apt.name}}</td>
+                                <td>{{apt.apartment_no}}</td>
 
-                </div>
+                                <td>
+                                    <button class="btn btn-success" ng-click="editapt(apt._id)">&#9998;</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger" ng-click="deleteapt(apt._id)">&times;</button>
+                                </td>
 
-                <!--For Showing errors debugging -->
-                <!--<ul class="panel-body" ng-if="apartment.$dirty">-->
-                <!--<li ng-repeat="(key, errors) in apartment.$error track by $index"><strong>{{ key }}</strong> errors-->
-                <!--<ul>-->
-                <!--<li ng-repeat="e in errors"><span>{{ e.$name }} has an error: <strong>{{ key }}</strong>.</span>-->
-                <!--</li>-->
-                <!--</ul>-->
-                <!--</li>-->
-                <!--</ul>-->
-                <!--End of Errors debugging-->
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-lg-2">
-                            Name :
-                        </div>
-                        <div class="col-lg-6">
+                            </tr>
+                        </table>
 
-                            <input type="text" name="Name" id="Name" ng-model="apt.name" class="form-control"
-                                   placeholder="Name" required/>
+                    </div>
+                </section>
 
-                            <div ng-class="{'alert alert-danger': apartment.Name.$touched && apartment.Name.$invalid }"
-                                 ng-messages="apartment.Name.$error"
-                                 ng-if="apartment.Name.$touched&&!apartment.Name.$dirty">
+                <section id="edit">
+                    <div class="col-md-12">
+                        <form enctype="multipart/form-data" name="apartment" ng-submit="addApartment()" novalidate="">
+                            <!--apartment.$valid &&-->
+                            <br>
+
+                            <div class="panel panel-primary">
+
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Application Form</h3>
+
+                                </div>
+
+                                <!--For Showing errors debugging -->
+                                <!--<ul class="panel-body" ng-if="apartment.$dirty">-->
+                                <!--<li ng-repeat="(key, errors) in apartment.$error track by $index"><strong>{{ key }}</strong> errors-->
+                                <!--<ul>-->
+                                <!--<li ng-repeat="e in errors"><span>{{ e.$name }} has an error: <strong>{{ key }}</strong>.</span>-->
+                                <!--</li>-->
+                                <!--</ul>-->
+                                <!--</li>-->
+                                <!--</ul>-->
+                                <!--End of Errors debugging-->
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            Name :
+                                        </div>
+                                        <div class="col-lg-6">
+
+                                            <input type="text" name="Name" id="Name" ng-model="apt.name"
+                                                   class="form-control"
+                                                   placeholder="Name" required/>
+
+                                            <div ng-class="{'alert alert-danger': apartment.Name.$touched && apartment.Name.$invalid }"
+                                                 ng-messages="apartment.Name.$error"
+                                                 ng-if="apartment.Name.$touched&&!apartment.Name.$dirty">
                         <span ng-messages="required"
                               ng-class="{'has-error': apartment.Name.$touched && apartment.Name.$invalid }">Wtf bro</span>
-                            </div>
-                        </div>
-                    </div>
-                    <br>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
 
-                    <div class="row">
-                        <div class="col-lg-2">
-                            Pictures :
-                        </div>
-                        <div class="col-lg-6 controls">
-                            <input type="file" name="image" id="imagebox"
-                                   onchange="angular.element(this).scope().fileSelected(this.files)"
-                                   accept="image/*">
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            Pictures :
+                                        </div>
+                                        <div class="col-lg-6 controls">
+                                            <input type="file" name="image" id="imagebox"
+                                                   onchange="angular.element(this).scope().fileSelected(this.files)"
+                                                   accept="image/*">
 
-                            <div id="imgReview" class="placeholder"></div>
-                        </div>
-
-
-                    </div>
-
-                    <br>
+                                            <div id="imgReview" class="placeholder"></div>
+                                        </div>
 
 
-                    <div class="row">
-                        <div class="col-lg-2">
-                            Address :
-                        </div>
-                        <div class="col-lg-6">
-                            <input type="text" id="aptNum" class="form-control" ng-model="apt.apartment_no"
-                                   name="aptno"
-                                   placeholder="Apt #" required/><br/>
+                                    </div>
+                                    <br>
 
-                            <div class="form-group"
-                                 ng-class="{ 'alert alert-danger': apartment.aptno.$touched && apartment.aptno.$invalid }"
-                                 ng-messages="apartment.aptno.$error"
-                                 ng-if="apartment.aptno.$touched&&!apartment.aptno.$dirty">
-                                <div ng-message="required">This field is required</div>
-                            </div>
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            Address :
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <input type="text" id="aptNum" class="form-control"
+                                                   ng-model="apt.apartment_no"
+                                                   name="aptno"
+                                                   placeholder="Apt #" required/><br/>
 
-                            <input type="text" id="street" class="form-control" ng-model="apt.street_name"
-                                   name="street_name"
-                                   placeholder="Street" required/><br/>
+                                            <div class="form-group"
+                                                 ng-class="{ 'alert alert-danger': apartment.aptno.$touched && apartment.aptno.$invalid }"
+                                                 ng-messages="apartment.aptno.$error"
+                                                 ng-if="apartment.aptno.$touched&&!apartment.aptno.$dirty">
+                                                <div ng-message="required">This field is required</div>
+                                            </div>
 
-                            <div class="form-group"
-                                 ng-class="{ 'alert alert-danger': apartment.street_name.$touched && apartment.street_name.$invalid }"
-                                 ng-messages="apartment.street_name.$error"
-                                 ng-if="apartment.street_name.$touched&&!apartment.street_name.$dirty">
-                                <div ng-message="required">This field is required</div>
-                            </div>
-                            <input type="text" id="city" class="form-control" ng-model="apt.city" name="city"
-                                   placeholder="City" required/><br/>
+                                            <input type="text" id="street" class="form-control"
+                                                   ng-model="apt.street_name"
+                                                   name="street_name"
+                                                   placeholder="Street" required/><br/>
 
-                            <div class="form-group"
-                                 ng-class="{ 'alert alert-danger': apartment.city.$touched && apartment.city.$invalid }"
-                                 ng-messages="apartment.city.$error"
-                                 ng-if="apartment.city.$touched&&!apartment.city.$dirty">
-                                <div ng-message="required">This field is required</div>
-                            </div>
-                            <input type="text" id="postal" class="form-control" ng-model="apt.postal_code"
-                                   name="postal_code"
-                                   placeholder="Postal Code"
-                                   ng-pattern="/^[ABCEGHJKLMNPRSTVXY][0-9][ABCEGHJKLMNPRSTVWXYZ] ?[0-9][ABCEGHJKLMNPRSTVWXYZ][0-9]$/"
-                                   required capitalize/><br/>
+                                            <div class="form-group"
+                                                 ng-class="{ 'alert alert-danger': apartment.street_name.$touched && apartment.street_name.$invalid }"
+                                                 ng-messages="apartment.street_name.$error"
+                                                 ng-if="apartment.street_name.$touched&&!apartment.street_name.$dirty">
+                                                <div ng-message="required">This field is required</div>
+                                            </div>
+                                            <input type="text" id="city" class="form-control" ng-model="apt.city"
+                                                   name="city"
+                                                   placeholder="City" required/><br/>
 
-                            <div class="form-group"
-                                 ng-class="{ 'alert alert-danger': apartment.postal_code.$touched && apartment.postal_code.$invalid }"
-                                 ng-messages="apartment.postal_code.$error">
-                                <div ng-message="required"
-                                     ng-if="apartment.postal_code.$touched&&!apartment.postal_code.$dirty">This
-                                    field is
-                                    required
-                                </div>
-                                <div ng-message="pattern"
-                                     ng-if="apartment.postal_code.$touched&&apartment.postal_code.$invalid">Invalid
-                                    Format for
-                                    Postal Code
-                                </div>
-                            </div>
-                            <select ng-model="apt.country" name="country" class="form-control" required>
-                                <option value="">-- Select a Country --</option>
-                                <option ng-repeat="country in countries" value="{{country.code}}">{{country.name}}
-                                </option>
-                            </select>
+                                            <div class="form-group"
+                                                 ng-class="{ 'alert alert-danger': apartment.city.$touched && apartment.city.$invalid }"
+                                                 ng-messages="apartment.city.$error"
+                                                 ng-if="apartment.city.$touched&&!apartment.city.$dirty">
+                                                <div ng-message="required">This field is required</div>
+                                            </div>
+                                            <input type="text" id="postal" class="form-control"
+                                                   ng-model="apt.postal_code"
+                                                   name="postal_code"
+                                                   placeholder="Postal Code"
+                                                   ng-pattern="/^[ABCEGHJKLMNPRSTVXY][0-9][ABCEGHJKLMNPRSTVWXYZ] ?[0-9][ABCEGHJKLMNPRSTVWXYZ][0-9]$/"
+                                                   required capitalize/><br/>
 
-                            <!--<input type="text" id="country" class="form-control" ng-model="apt.country" name="country"-->
-                            <!--placeholder="Country" required/><br/>-->
+                                            <div class="form-group"
+                                                 ng-class="{ 'alert alert-danger': apartment.postal_code.$touched && apartment.postal_code.$invalid }"
+                                                 ng-messages="apartment.postal_code.$error">
+                                                <div ng-message="required"
+                                                     ng-if="apartment.postal_code.$touched&&!apartment.postal_code.$dirty">
+                                                    This
+                                                    field is
+                                                    required
+                                                </div>
+                                                <div ng-message="pattern"
+                                                     ng-if="apartment.postal_code.$touched&&apartment.postal_code.$invalid">
+                                                    Invalid
+                                                    Format for
+                                                    Postal Code
+                                                </div>
+                                            </div>
+                                            <select ng-model="apt.country" name="country" class="form-control" required>
+                                                <option value="">-- Select a Country --</option>
+                                                <option ng-repeat="country in countries" value="{{country.code}}">
+                                                    {{country.name}}
+                                                </option>
+                                            </select>
+
+                                            <!--<input type="text" id="country" class="form-control" ng-model="apt.country" name="country"-->
+                                            <!--placeholder="Country" required/><br/>-->
 
 
-                            <div class="form-group"
-                                 ng-class="{ 'alert alert-danger': apartment.country.$touched && apartment.country.$invalid }"
-                                 ng-messages="apartment.country.$error"
-                                 ng-if="apartment.country.$touched&&!apartment.country.$dirty">
-                                <div ng-message="required">Select a Country</div>
-                            </div>
-                        </div>
-                    </div>
-                    <br>
+                                            <div class="form-group"
+                                                 ng-class="{ 'alert alert-danger': apartment.country.$touched && apartment.country.$invalid }"
+                                                 ng-messages="apartment.country.$error"
+                                                 ng-if="apartment.country.$touched&&!apartment.country.$dirty">
+                                                <div ng-message="required">Select a Country</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
 
-                    <div class="row">
-                        <div class="col-lg-2">
-                            Rental Type :
-                        </div>
-                        <div class="col-lg-6  radio">
-                            <label for="room">
-                                <input type="radio" ng-model="apt.rental_type" ng-required="!apt.rental_type"
-                                       value="Room"
-                                       name="rental" id="room"/>Room
-                            </label>
-                            <label for="house">
-                                <input type="radio" ng-model="apt.rental_type" ng-required="!apt.rental_type"
-                                       value="House"
-                                       name="rental" id="house"/>House
-                            </label>
-                            <label for="apt">
-                                <input type="radio" ng-model="apt.rental_type" ng-required="!apt.rental_type"
-                                       name="rental"
-                                       id="apt" value="Apartment"/>Apartment</label>
-                            <label for="condo">
-                                <input type="radio" ng-model="apt.rental_type" ng-required="!apt.rental_type"
-                                       name="rental"
-                                       id="condo" value="Condo"/>Condo</label>
-                            <label for="storage">
-                                <input type="radio" ng-model="apt.rental_type" ng-required="!apt.rental_type"
-                                       name="rental"
-                                       id="storage" value="Storage"/>Storage</label>
-                            <label for="pool">
-                                <input type="radio" ng-model="apt.rental_type" ng-required="!apt.rental_type"
-                                       name="rental"
-                                       value="Pool" id="pool"/>Pool</label>
-                            <label for="toilet">
-                                <input type="radio" ng-model="apt.rental_type" ng-required="!apt.rental_type"
-                                       name="rental"
-                                       id="toilet" value="Toilet"/>Toilet</label>
-                            <label for="kitchen">
-                                <input type="radio" ng-model="apt.rental_type" ng-required="!apt.rental_type"
-                                       name="rental"
-                                       id="kitchen" value="Kitchen"/>Kitchen</label>
-                            <label for="other">
-                                <input type="radio" ng-model="apt.rental_type" ng-required="!apt.rental_type"
-                                       name="rental"
-                                       id="other" value="Other"/>Other</label>
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            Rental Type :
+                                        </div>
+                                        <div class="col-lg-6  radio">
+                                            <label for="room">
+                                                <input type="radio" ng-model="apt.rental_type"
+                                                       ng-required="!apt.rental_type"
+                                                       value="Room"
+                                                       name="rental" id="room"/>Room
+                                            </label>
+                                            <label for="house">
+                                                <input type="radio" ng-model="apt.rental_type"
+                                                       ng-required="!apt.rental_type"
+                                                       value="House"
+                                                       name="rental" id="house"/>House
+                                            </label>
+                                            <label for="apt">
+                                                <input type="radio" ng-model="apt.rental_type"
+                                                       ng-required="!apt.rental_type"
+                                                       name="rental"
+                                                       id="apt" value="Apartment"/>Apartment</label>
+                                            <label for="condo">
+                                                <input type="radio" ng-model="apt.rental_type"
+                                                       ng-required="!apt.rental_type"
+                                                       name="rental"
+                                                       id="condo" value="Condo"/>Condo</label>
+                                            <label for="storage">
+                                                <input type="radio" ng-model="apt.rental_type"
+                                                       ng-required="!apt.rental_type"
+                                                       name="rental"
+                                                       id="storage" value="Storage"/>Storage</label>
+                                            <label for="pool">
+                                                <input type="radio" ng-model="apt.rental_type"
+                                                       ng-required="!apt.rental_type"
+                                                       name="rental"
+                                                       value="Pool" id="pool"/>Pool</label>
+                                            <label for="toilet">
+                                                <input type="radio" ng-model="apt.rental_type"
+                                                       ng-required="!apt.rental_type"
+                                                       name="rental"
+                                                       id="toilet" value="Toilet"/>Toilet</label>
+                                            <label for="kitchen">
+                                                <input type="radio" ng-model="apt.rental_type"
+                                                       ng-required="!apt.rental_type"
+                                                       name="rental"
+                                                       id="kitchen" value="Kitchen"/>Kitchen</label>
+                                            <label for="other">
+                                                <input type="radio" ng-model="apt.rental_type"
+                                                       ng-required="!apt.rental_type"
+                                                       name="rental"
+                                                       id="other" value="Other"/>Other</label>
 
-                            <div class="has-error"
-                                 ng-class="{ 'has-error': apartment.rental.$touched && apartment.rental.$invalid }"
-                                 ng-messages="apartment.rental.$error"
-                                 ng-if="apartment.rental.$touched &&!apartment.rental.$dirty">
-                                <div ng-message="required">This field is required</div>
-                            </div>
+                                            <div class="has-error"
+                                                 ng-class="{ 'has-error': apartment.rental.$touched && apartment.rental.$invalid }"
+                                                 ng-messages="apartment.rental.$error"
+                                                 ng-if="apartment.rental.$touched &&!apartment.rental.$dirty">
+                                                <div ng-message="required">This field is required</div>
+                                            </div>
 
-                        </div>
-                    </div>
-                    <br>
+                                        </div>
+                                    </div>
+                                    <br>
 
-                    <div class="row">
-                        <div class="col-lg-2">
-                            Duration :
-                        </div>
-                        <div class="col-lg-6 form-group">
-                            <input type="text" name="durNum" ng-model="apt.duration" class="form-control"
-                                   placeholder="Duration" required duration/>
-                            <span ng-if="apartment.durtype.$touched">{{apt.durtype}}</span>
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            Duration :
+                                        </div>
+                                        <div class="col-lg-6 form-group">
+                                            <input type="text" name="durNum" ng-model="apt.duration"
+                                                   class="form-control"
+                                                   placeholder="Duration" required duration/>
+                                            <span ng-if="apartment.durtype.$touched">{{apt.durtype}}</span>
 
-                            <div class="form-group"
-                                 ng-class="{ 'alert alert-danger': apartment.durNum.$touched && apartment.durNum.$invalid }"
-                                 ng-messages="apartment.duration.$error"
-                                 ng-if="apartment.durNum.$touched&&!apartment.durNum.$dirty">
-                                <div ng-message="required">This field is required</div>
-                            </div>
+                                            <div class="form-group"
+                                                 ng-class="{ 'alert alert-danger': apartment.durNum.$touched && apartment.durNum.$invalid }"
+                                                 ng-messages="apartment.duration.$error"
+                                                 ng-if="apartment.durNum.$touched&&!apartment.durNum.$dirty">
+                                                <div ng-message="required">This field is required</div>
+                                            </div>
 
-                            <br/>
-                            <input type="radio" ng-required="!apt.durtype" name="durtype" id="hour"
-                                   ng-model="apt.durtype"
-                            <input type="radio" ng-required="!apt.durtype" name="durtype" id="hour"
-                                   ng-model="apt.durtype"
-                                   value="hour(s)"/>hour(s)
-                            <input type="radio" name="durtype" ng-required="!apt.durtype" id="day"
-                                   ng-model="apt.durtype"
-                                   value="day(s)"/>day(s)
-                            <input type="radio" name="durtype" ng-required="!apt.durtype" id="month"
-                                   ng-model="apt.durtype"
-                                   value="month(s)"/>month(s)
-                            <input type="radio" name="durtype" ng-required="!apt.durtype" id="year"
-                                   ng-model="apt.durtype"
-                                   value="year(s)"/>year(s)
-                            <div ng-class="{ 'alert alert-warning': apartment.durtype.$pristine}"
-                                 ng-messages="apartment.durtype.$error"
-                                 ng-if="apartment.durNum.$touched&&apartment.durtype.$error">
-                                <div ng-message="required">This field is required</div>
-                            </div>
-                        </div>
+                                            <br/>
+                                            <input type="radio" ng-required="!apt.durtype" name="durtype"
+                                                   ng-model="apt.durtype"/>
+                                            <input type="radio" ng-required="!apt.durtype" name="durtype" id="hour"
+                                                   ng-model="apt.durtype"
+                                                   value="hour(s)"/>hour(s)
+                                            <input type="radio" name="durtype" ng-required="!apt.durtype" id="day"
+                                                   ng-model="apt.durtype"
+                                                   value="day(s)"/>day(s)
+                                            <input type="radio" name="durtype" ng-required="!apt.durtype" id="month"
+                                                   ng-model="apt.durtype"
+                                                   value="month(s)"/>month(s)
+                                            <input type="radio" name="durtype" ng-required="!apt.durtype" id="year"
+                                                   ng-model="apt.durtype"
+                                                   value="year(s)"/>year(s)
+                                            <div ng-class="{ 'alert alert-warning': apartment.durtype.$pristine}"
+                                                 ng-messages="apartment.durtype.$error"
+                                                 ng-if="apartment.durNum.$touched&&apartment.durtype.$error">
+                                                <div ng-message="required">This field is required</div>
+                                            </div>
+                                        </div>
 
-                    </div>
-                    <br>
+                                    </div>
+                                    <br>
 
-                    <div class="row">
-                        <div class="col-lg-2">
-                            # of Occupants:
-                        </div>
-                        <div class="col-lg-6">
-                            <input name="qty" id="qty" type="text" class="form-control" ng-model="apt.occupants_no"
-                                   placeholder="# of Occupants" required/>
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            # of Occupants:
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <input name="qty" id="qty" type="text" class="form-control"
+                                                   ng-model="apt.occupants_no"
+                                                   placeholder="# of Occupants" required/>
 
-                            <div class="form-group"
-                                 ng-class="{ 'alert alert-danger': apartment.qty.$touched && apartment.qty.$invalid }"
-                                 ng-messages="apt.qty.$error" ng-if="apartment.qty.$touched&&!apartment.qty.$dirty">
-                                <div ng-messages="required">This field is required</div>
-                            </div>
-                        </div>
-                    </div>
-                    <br>
+                                            <div class="form-group"
+                                                 ng-class="{ 'alert alert-danger': apartment.qty.$touched && apartment.qty.$invalid }"
+                                                 ng-messages="apt.qty.$error"
+                                                 ng-if="apartment.qty.$touched&&!apartment.qty.$dirty">
+                                                <div ng-messages="required">This field is required</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
 
-                    <div class="row">
-                        <div class="col-lg-2">
-                            Description:
-                        </div>
-                        <div class="col-lg-6">
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            Description:
+                                        </div>
+                                        <div class="col-lg-6">
                     <textarea name="description" id="description" class="form-control" ng-model="apt.description"
                               placeholder="Description">
 
                     </textarea>
+                                        </div>
+                                    </div>
+                                    <br>
+
+                                    <div class="row">
+                                        <div class="col-lg-8">
+
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <button class="btn btn-danger">Clear Fields</button>
+
+                                        </div>
+                                        <div class="col-lg-2"> <!--ng-disabled="apartment.$invalid"-->
+                                            <input type="submit" class="btn btn-success"
+                                                   value="Add Apartment"/>
+                                        </div>
+                                    </div>
+                                    <br>
+                                </div>
+
+                            </div>
+
+
+                        </form>
+                    </div>
+                </section>
+
+                <section id="view_profile">
+
+                    <div class="col-md-12">
+                        <div class="panel panel-primary row panel-body">
+                            <div class="col-md-12">
+                                <img class="img-circle center-block" src="{{profile.profile_image}}"/>
+                            </div>
+                            <br/><br/>
+
+                            <div class="col-md-6">
+                                <span>Username</span>: <span>{{profile.username}}</span>
+                            </div>
+                            <div class="col-md-6">
+                                <span>First Name</span>: <span>{{profile.first_name}}</span>
+                            </div>
+                            <div class="col-md-6">
+                                <span>Last Name</span>: <span>{{profile.last_name}}</span>
+                            </div>
+                            <div class="col-md-6">
+                                <span>Email</span>: <span>{{profile.email}}</span>
+                            </div>
+                            <div class="col-md-6">
+                                <span>Contact Number</span>: <span>{{profile.contact_number}}</span>
+                            </div>
                         </div>
                     </div>
-                    <br>
+                </section>
 
-                    <div class="row">
-                        <div class="col-lg-8">
 
-                        </div>
-                        <div class="col-lg-2">
-                            <button class="btn btn-danger">Clear Fields</button>
+                <section id="edit_profile">
+                    <div class="col-md-12">
+                        <form data-ng-submit="uploadComplete()" enctype="multipart/form-data">
 
-                        </div>
-                        <div class="col-lg-2"> <!--ng-disabled="apartment.$invalid"-->
-                            <input type="submit" class="btn btn-success"
-                                   value="Add Apartment"/>
-                        </div>
+                            <div class="panel panel-primary">
+
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Edit Profile</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            User Name :
+                                        </div>
+                                        <div class="col-lg-6">
+
+                                            <input type="text" name="Name" id="Name" ng-model="profile.username"
+                                                   class="form-control"/>
+                                        </div>
+                                    </div>
+                                    <br>
+
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            Profile Picture :
+                                        </div>
+                                        <div class="col-lg-6 controls">
+
+                                            <!--<input type="file" name="image" ng-file-select="onSelectFile($files)" multiple>-->
+                                            <input type="file" name="profile" multiple
+                                                   onchange="angular.element(this).scope().uploadedFile(this)"/>
+
+                                            <div id="profile_img" class="placeholder"></div>
+                                        </div>
+                                    </div>
+                                    <br>
+
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            Email
+                                        </div>
+                                        <div class="col-lg-6">
+
+                                            <input type="text" name="email"
+                                                   ng-model="profile.email"
+                                            />
+                                        </div>
+                                    </div>
+                                    <br>
+
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            First Name:
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <input type="text" name="first"
+                                                   ng-model="profile.first_name"/>
+                                        </div>
+                                    </div>
+                                    <br>
+
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            Last Name:
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <input type="text" name="last"
+                                                   ng-model="profile.last_name"/>
+                                        </div>
+                                    </div>
+                                    <br>
+
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            Gender:
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <input type="radio" ng-model="profile.gender"
+                                                   ng-checked="profile.gender=='Male'" value="Male" name="gender"/> Male
+                                            <input type="radio" ng-model="profile.gender"
+                                                   ng-checked="profile.gender=='Female'" value="Female" name="gender"/>
+                                            Female
+                                            <input type="radio" ng-model="profile.gender"
+                                                   ng-checked="profile.gender=='Other'" value="Other" name="gender"/>
+                                            Other
+                                        </div>
+                                    </div>
+                                    <br>
+
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            Contact Number:
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <input type="text" name="contact"
+                                                   ng-model="profile.contact_number"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-8">
+
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <button class="btn btn-danger">Clear Fields</button>
+
+                                        </div>
+                                        <div class="col-lg-2"> <!--ng-disabled="apartment.$invalid"-->
+                                            <input type="submit" class="btn btn-success"
+                                                   value="Update"/>
+                                        </div>
+                                    </div>
+                                    <br>
+                                </div>
+                            </div>
+
+                        </form>
                     </div>
-                    <br>
-
-                </div>
+                </section>
 
             </div>
-
-
-        </form>
-    </div>
-    <div clas="panel panel-primary ">
-        <div class=" col-md-6">
-
-            <table class="table table-striped">
-                <tr ng-repeat="apt in apartments">
-                    <!--<td>{{apt._id}}</td>-->
-                    <td>{{apt.name}}</td>
-                    <td>{{apt.apartment_no}}</td>
-
-                    <td>
-                        <button class="btn btn-success" ng-click="editapt(apt._id)">&#9998;</button>
-                    </td>
-                    <td>
-                        <button class="btn btn-danger" ng-click="deleteapt(apt._id)">&times;</button>
-                    </td>
-
-                </tr>
-            </table>
-
         </div>
     </div>
+
 </div>
+
 
 </body>

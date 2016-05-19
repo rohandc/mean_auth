@@ -8,10 +8,13 @@ var User = new Schema(
     {
         username: String,
         password:String,
-        email: String
+            email: {type: String, default: "-"},
+            profile_image: {type: String, default: "partials/images/profile_images/default.jpg"},
+            first_name: {type: String, default: "-"},
+            last_name: {type: String, default: "-"},
+            contact_number: {type: String, default: "-"},
+            gender: String
     });
-
-
 
 User.plugin(passportLocalMongoose);
 
