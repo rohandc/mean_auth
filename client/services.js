@@ -8,7 +8,7 @@ myApp.factory('UploadService', ['$http', function ($http) {
         angular.forEach(files, function (file) {
             fd.append('file', file);
         });
-        fd.data = JSON.stringify(data);
+        fd.append('data', JSON.stringify(data));
         $http.post(url, fd, {
                 transformRequest: angular.identity,
                 withCredentials: false,

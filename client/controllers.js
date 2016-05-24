@@ -602,10 +602,10 @@ myApp.controller('apartmentController', ['$scope', 'ApartmentService', 'UploadSe
             var data = new FormData();
             data.username = $scope.profile.username;
             data.email = $scope.profile.email;
-            data.first = $scope.profile.first_name;
-            data.last = $scope.profile.last_name;
+            data.first_name = $scope.profile.first_name;
+            data.last_name = $scope.profile.last_name;
             data.gender = $scope.profile.gender;
-            data.contact = $scope.profile.contact;
+            data.contact_number = $scope.profile.contact_number;
 
             UploadService.uploadfile($scope.files, data, '/user/profileUpdate',
                 function (msg) // success

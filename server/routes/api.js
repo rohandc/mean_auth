@@ -16,6 +16,7 @@ var express = require('express'),
     Apartment = require('../models/apartment_info.js'),
     apt = new Apartment(),//Model for Apartment registeration
     mongoose = require('mongoose'),
+    fs = require('fs'),
     Admin = require('../models/admin.js');
 
 
@@ -97,29 +98,66 @@ router.get('/current_user', function (req, res) {
 
 //Multer test
 var multer = require('multer');
+var profile_pic = [];
 var storage = multer.diskStorage({
-    destination: './client/partials/images/uploads/'
-    /*,
-     filename: function (filename,file,callback) {
-     callback(null,filename.replace(/\W+/g, '-').toLowerCase() + Date.now()+file.mimetype);
-     }*/
+    destination: './client/partials/images/uploads/',
+    filename: function (req, file, cb) {
+        var name = file.originalname;
+        var name1 = name.substring(0, name.lastIndexOf("."));
+        var type = name.substring(name.indexOf("."), name.length);
+        profile_pic.push(name1 + '-' + Date.now() + type);
+        cb(null, name1 + '-' + Date.now() + type);
+    }
 });
 var upload = multer({storage: storage}).any('profile');
 
 router.post('/profileUpdate', function (req, res) {
 
-    upload(req, res, function (err) {
+    var obj = JSON.parse(req.body.data)
+    obj.profile_image = "/partials/images/uploads/" + profile_pic[0];
 
-        if (err) {
-            return res.end("Error uploading file.");
+
+    User.findById(req.user._id, {}, function (err, user) {
+
+        if (err) return next(err);
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User " + req.user.username + " cannot be found"
+            });
         }
-        res.end("File is uploaded");
+        fs.stat(__dirname + "/../../client/" + user.profile_image, function (err, file) {
+
+            if (err == null) {
+                fs.unlink(__dirname + "/../../client/" + user.profile_image, function (err) {
+                    if (err)
+                        console.log(err);
+
+                    console.log('successfully deleted file');
+                });
+            }
+            else {
+                console.log(err + " Some error");
+            }
+
+
+        })
+
+
+        // Update the course model
+        user.update(obj, function (error, user) {
+            if (error) return next(error);
+
+            res.send(user);
+            profile_pic = [];
+        });
+
     });
+
 
 });
 
 
-//Formidable end
 //End of Routes
 //Routes for Aparatments
 
@@ -435,3 +473,4 @@ router.get('/admin/apartments', function (req, res, next) {
 
 //console.log(router.stack);
 module.exports = router;
+module.exports.upload = upload;
