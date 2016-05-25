@@ -122,8 +122,8 @@ myApp.controller('navbarController', ['$scope', '$location', 'AuthService',
         });
     }]);
 
-myApp.controller('apartmentController', ['$scope', 'ApartmentService', 'UploadService', '$uibModal', '$log', '$anchorScroll', '$location', '$rootScope',
-    function ($scope, ApartmentService, UploadService, $uibModal, $log, $anchorScroll, $location, $rootScope) {
+myApp.controller('apartmentController', ['$scope', 'ApartmentService', 'UploadService', '$uibModal', '$log', '$anchorScroll', '$location', '$route',
+    function ($scope, ApartmentService, UploadService, $uibModal, $log, $anchorScroll, $location, $route) {
         //SPA scrolling to different location
         $scope.scrollTo = function (id) {
             $location.hash(id);
@@ -610,7 +610,8 @@ myApp.controller('apartmentController', ['$scope', 'ApartmentService', 'UploadSe
             UploadService.uploadfile($scope.files, data, '/user/profileUpdate',
                 function (msg) // success
                 {
-                    console.log('uploaded');
+                    console.log('uploaded' + msg);
+                    $scope.apply();
                 },
                 function (msg) // error
                 {
