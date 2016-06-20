@@ -52,6 +52,8 @@ custom.initializeMongoose(function (res) {
  }).any('image');
  app.use(handler);
  */
+
+
 app.use(routes.upload);
 
 // user schema/model
@@ -122,7 +124,8 @@ app.use(function (req, res, next) {
 });
 app.use(function (err, req, res) {
     res.status(err.status || 500);
-    console.log(err);
+    console.log(err.message);
+    console.log(err.stack);
     res.render(JSON.stringify({//res.stringify
         message: err.message,
         error: {}

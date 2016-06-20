@@ -17,7 +17,9 @@ var express = require('express'),
     apt = new Apartment(),//Model for Apartment registeration
     mongoose = require('mongoose'),
     fs = require('fs'),
-    Admin = require('../models/admin.js');
+    async = require('async'),
+    Admin = require('../models/admin.js'),
+    custom = require('../Custom');
 
 
 //Define Middleware Using ROUTER from EXPRESS
@@ -163,18 +165,17 @@ router.post('/profileUpdate', function (req, res) {
 
 router.post('/registerApt', function (req, res) {
 
-    var conn = mongoose.connection;
+    var dirname = require('path').dirname(__dirname);
+
+
     var files = req.files;
     var formdata = req.body;
-    var picture = "";
-    for (file in files) {
-        file = files[file];
-        var file_name = custom.generateObjectId("");
-        custom.insertintoDB(file, file_name, function (res) {
+    var picture = custom.prototype.generateObjectId("");
+    files.forEach(function (file) {
+        custom.prototype.insertintoDB(file, picture, function (res) {
             console.log(res);
         });
-        picture += file_name + ",";
-    }
+    });
 
 
     apt.name = formdata.name;
@@ -185,7 +186,7 @@ router.post('/registerApt', function (req, res) {
     apt.country = formdata.country;
     apt.rental_type = formdata.rental_type;
     apt.author = req.user.username;
-    apt.picture = picture.replace(/,\s*$/, "");
+    apt.files = picture;
     apt.price = formdata.price;
     apt.duration = formdata.duration;
     apt.occupants_no = formdata.occupants_no;
@@ -229,6 +230,7 @@ router.get('/getApt', function (req, res) {
         if (err)
             console.log(err);
 
+
         res.send(apartments);
     });
 
@@ -247,7 +249,7 @@ router.delete('/deleteApt/:id', function (req, res) {
 
 });
 
-router.get('/getApt/:id', function (req, res) {
+router.get('/getApt/:id', function (req, res, next) {
 
     /*  Apartment.findOne({_id: req.params.id})
      .populate("aptID")
@@ -277,33 +279,28 @@ router.get('/getApt/:id', function (req, res) {
     var imageObject = [];
 
     Apartment.findOne({_id: req.params.id}).lean().stream()
-        .on ("error", function (error) {
+        .on("error", function (error) {
             console.log(error);
         })
-        .on ("data", function (doc) {
+        .on("data", function (doc) {
             apartment = doc;
 
         })
-        .on ("close", function () {
+        .on("close", function () {
 
-            /*     var images = apartment.picture.split(",");
-             images.forEach(function (image) {
+            console.log(apartment.files);
 
-             custom.readfromDB(image, function (err, response) {
-             if (err) {
-             console.log(err);
-             return;
-             }
-             //apartment.picture=apartment.picture+response;
-             console.log(apartment);
-             /!* apartment.methods.addfile(response, function (resp) {
-             console.log(resp);
-             })*!/
+            custom.prototype.readfromDB(apartment.files, function (err, store) {
+                if (err)
+                    console.log('get file error ===============');
 
-             })
+                apartment.files = store;
+                res.send(apartment);
 
-             })*/
-            res.send(apartment);
+
+            });
+
+
         });
 
 

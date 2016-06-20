@@ -19,9 +19,11 @@ myApp.factory('UploadService', ['$http', function ($http) {
             })
             .success(function (data) {
                 console.log(data);
+                success(data);
             })
             .error(function (data) {
                 console.log(data);
+                error(data);
             });
     }
 

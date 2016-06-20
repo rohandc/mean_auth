@@ -22,7 +22,6 @@ var Apartment = new Schema(
         country: String,
         rental_type: String,
         author: String,
-        picture: String,
         price: {
             type: Number,
             get: function (num) {//Retreive the value in Dollars
@@ -48,7 +47,7 @@ var Apartment = new Schema(
             }
         }
         ,
-        files:[Schema.Types.Mixed]
+        files: String
     },
     {
 

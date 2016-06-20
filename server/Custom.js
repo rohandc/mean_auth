@@ -4,6 +4,8 @@ var custom = function () {
     GridStore = mongoose.mongo.GridStore;
     Grid = require('gridfs-stream');
     fs = require('fs');
+    async = require('async');
+
 
     custom.prototype.initializeMongoose = function (callback) {
         var mongoLocal = "mongodb://localhost/mean-auth"
@@ -37,10 +39,10 @@ var custom = function () {
 
 
     custom.prototype.insertintoDB = function (file, file_id, fn) {
-
+        //Storing file in to database if file is stored on disk
         new GridStore(
             mongoose.connection.db,
-            file_id, file.originalname,
+            file.filename,
             'w',
             {
                 root: 'image',
@@ -56,24 +58,74 @@ var custom = function () {
                 }
             });
 
+        //Storing file into database if file is from buffer
+        /*
+         var gfs = new GridStore(
+         mongoose.connection.db,
+         file.originalname,
+         'w+',
+         {
+         root: 'image',
+         content_type: file.mimetype,
+         metadata: file_id
+         }
+         ).open(function (err, gridstore) {
+         if (err) {
+         return fn(err);
+         }
+
+         gridstore.write(file.buffer, function (err, GS) {
+         console.log("file written");
+         if (err) throw err;
+         GS.close(function (err, result) {
+         if (err) throw err
+         console.log(result);
+         })
+         });
+
+
+         })*/
     }
+
 
     custom.prototype.readfromDB = function (file_id, callback) {
 
-        new GridStore(mongoose.connection.db, file_id, file_id, "r", {root: 'image'})
-            .open(function (err, store) {
+        var files_arr = [];
+        var collection = mongoose.connection.db.collection("image.files");
+        collection.find({'metadata': file_id})
+            .toArray(function (err, files) {
+                if (err)
+                    callback(err, null)
 
-                if (err) {
 
-                    console.log(err);
+                files.forEach(function (file) {
+                    console.log(file);
+                    var date = new Date();
+                    var file_name = __dirname + "/../client/partials/images/uploads/" + file.filename;
+                    files_arr.push(file_name);
+                    var writestream = fs.createWriteStream(file_name);
+                    var gridstore = new GridStore(mongoose.connection.db, file._id, "r", {root: 'image'});
+                    gridstore.open(function (err, gridobj) {
+                        if (err)
+                            console.log(err);
+                        var readstream = gridobj.stream(true);
+                        readstream.on('end', function () {
+                            console.log("End Called");
+                        })
+                        readstream.on('close', function () {
+                            console.log("Close called")
+                        });
 
-                    return callback(err);
-                }
-                else {
+                        readstream.pipe(writestream);
+                    })
 
-                    return callback(null, store);
-                }
-            })
+
+                })
+
+                callback(null, files_arr);
+            });
+
+
     }
 
 
@@ -88,6 +140,7 @@ var custom = function () {
             if (err) {
                 console.log('deleteGridFile ERROR ===================');
                 return fn(err);
+
             }
 
             for (var k in result) {

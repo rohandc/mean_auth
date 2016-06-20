@@ -146,8 +146,7 @@ myApp.controller('apartmentController', ['$scope', 'ApartmentService', 'UploadSe
 
         }
 
-        $scope.reset = function ()
-        {
+        $scope.reset = function () {
             $scope.apt.name = "";
             $scope.apt.apartment_no = "";
             $scope.apt.street_name = "";
@@ -501,7 +500,6 @@ myApp.controller('apartmentController', ['$scope', 'ApartmentService', 'UploadSe
                 var imageType = /image.*/;
                 var reader = new FileReader();
                 if (file.type.match(imageType)) {
-                    //console.log(file);
 
                     reader.readAsDataURL(file);
                     reader.addEventListener("load", function (e) {
@@ -611,7 +609,7 @@ myApp.controller('apartmentController', ['$scope', 'ApartmentService', 'UploadSe
                 function (msg) // success
                 {
                     console.log('uploaded' + msg);
-                    $scope.apply();
+                    $scope.initialize();
                 },
                 function (msg) // error
                 {
@@ -622,8 +620,43 @@ myApp.controller('apartmentController', ['$scope', 'ApartmentService', 'UploadSe
         $scope.uploadedFile = function (element) {
             $scope.$apply(function ($scope) {
                 $scope.files = element.files;
+
+                //  var files = $("#imagebox").get(0).files;
+
+                var target = $('#profile_img');
+
+                var file = $scope.files[0];
+                var imageType = /image.*/;
+                var reader = new FileReader();
+                if (file.type.match(imageType)) {
+                    reader.readAsDataURL(file);
+                    reader.addEventListener("load", function (e) {
+                        console.log(e);
+                        var img = $('<img  />', {
+                            src: e.target.result,
+                            class: "imageThumb",
+                            name: file.name,
+                            onClick: "angular.element(this).scope().delete_profile(this)"
+                        });
+                        target.append(img);
+                    }, false);
+                }
+                else {
+                    console.error("File not Supported")
+                }
+
+
             });
         }
+
+        $scope.delete_profile = function (input) {
+
+            $("img[name='" + input.name + "']").remove();
+            $scope.files = null;
+            $("#profile_image").val("");
+            console.log($scope.files);
+        }
+
 
         //$scope.onSelectFile = function ($files) {
         //    for (var i = 0; i < $files.length; i++) {
@@ -890,7 +923,33 @@ myApp.controller('ModalInstanceCtrl', function (ApartmentService, $rootScope, $s
         {name: 'Zambia', code: 'ZM'},
         {name: 'Zimbabwe', code: 'ZW'}
     ];
+
+    function imgPreview(file) {
+
+        if (/\.(jpe?g|png|gif)$/i.test(file.filename)) {
+            var reader = new FileReader();
+            var preview = $('#modal_imgReview');
+            reader.readAsText(file);
+            reader.addEventListener("load", function (e) {
+                console.log(e);
+                var img = $('<img  />', {
+                    src: e.target.result,
+                    class: "imageThumb",
+                    name: file.name,
+                    onClick: "angular.element(this).scope().delete(this)"
+                });
+                preview.append(img);
+            }, false);
+
+        }
+    }
+
     //End of List
+    if (apt.files != undefined || apt.files) {
+        apt.files.forEach(function (file) {
+            imgPreview(file);
+        });
+    }
 
     $scope.apt = apt;
     console.log($scope.apt);
@@ -916,9 +975,9 @@ myApp.controller('ModalInstanceCtrl', function (ApartmentService, $rootScope, $s
 
         ApartmentService.updateApartment($scope.apt._id, editdata)
             .then(function (success) {
-            $rootScope.$broadcast('updateApartment');
+                $rootScope.$broadcast('updateApartment');
                 $uibModalInstance.close();
-        });
+            });
 
 
     };
@@ -926,6 +985,8 @@ myApp.controller('ModalInstanceCtrl', function (ApartmentService, $rootScope, $s
     $scope.cancel = function () {
         $uibModalInstance.dismiss('cancel');
     };
+
+
 });
 
 
@@ -1003,22 +1064,20 @@ myApp.directive('modalDialog', function () {
  });*/
 
 
+myApp.controller('adminLoginController', ['$scope', 'AdminService', function ($scope, AdminService) {
+    $scope.login = function () {
 
-myApp.controller('adminLoginController',['$scope','AdminService',function($scope,AdminService){
-    $scope.login= function () {
-
-        AdminService.loginAdmin($scope.username,$scope.password);
+        AdminService.loginAdmin($scope.username, $scope.password);
     }
 }]);
 
 
-myApp.controller('adminRegisterController',['$scope','AdminService',function($scope,AdminService){
+myApp.controller('adminRegisterController', ['$scope', 'AdminService', function ($scope, AdminService) {
 
-    $scope.register=function()
-    {
+    $scope.register = function () {
 
-            AdminService
-                .registerAdmin($scope.email,$scope.password)
+        AdminService
+            .registerAdmin($scope.email, $scope.password)
 
 
     }
@@ -1027,12 +1086,11 @@ myApp.controller('adminRegisterController',['$scope','AdminService',function($sc
 }]);
 
 
-myApp.controller('adminListController',['$scope','AdminService','ApartmentService','$uibModal',function($scope,AdminService,ApartmentService,$uibModal){
+myApp.controller('adminListController', ['$scope', 'AdminService', 'ApartmentService', '$uibModal', function ($scope, AdminService, ApartmentService, $uibModal) {
 
-        AdminService.getApartments().
-        then(function(data){
-            $scope.apartments=data;
-        });
+    AdminService.getApartments().then(function (data) {
+        $scope.apartments = data;
+    });
 
 
     $scope.editapt = function (id) {
@@ -1070,8 +1128,6 @@ myApp.controller('adminListController',['$scope','AdminService','ApartmentServic
         };
 
         //Modal End
-
-
 
 
     }
