@@ -1,5 +1,37 @@
 var myApp = angular.module('myApp');
 
+myApp.factory('UploadService', ['$http', function ($http) {
+
+    function uploadfile(files, data, url, success, error) {
+
+        var fd = new FormData();
+        angular.forEach(files, function (file) {
+            fd.append('file', file);
+        });
+        fd.append('data', JSON.stringify(data));
+        $http.post(url, fd, {
+                transformRequest: angular.identity,
+                withCredentials: false,
+                headers: {
+                    'Content-Type': undefined
+                }
+
+            })
+            .success(function (data) {
+                console.log(data);
+                success(data);
+            })
+            .error(function (data) {
+                console.log(data);
+                error(data);
+            });
+    }
+
+    return ({
+        uploadfile: uploadfile
+    })
+}])
+
 myApp.factory('AuthService',
     ['$q', '$timeout', '$http',
         function ($q, $timeout, $http) {
@@ -128,11 +160,7 @@ myApp.factory('AuthService',
             });
         }]);
 
-<<<<<<< HEAD
 myApp.factory('ApartmentService', ['$q', '$http',function ($q, $http) {
-=======
-myApp.factory('ApartmentService', ['$q', '$http', function ($q, $http) {
->>>>>>> c4f80b8d5ce9b216fe87a459a01475561a5b2cf2
 
     console.log('Inside Apartment Service Debugging');
 
@@ -250,19 +278,37 @@ myApp.factory('ApartmentService', ['$q', '$http', function ($q, $http) {
         return promise.promise;
     }
 
+    function getcurrentUser() {
+        var promise = $q.defer();
+        $http.get('/user/current_user')
+            .success(function (response, status) {
+                if (status === 200) {
+                    promise.resolve(response);
+                } else {
+                    promise.reject(response);
+                }
+            })
+            .error(function (data) {
+                promise.reject(data);
+
+            });
+
+        return promise.promise;
+    }
+
     return (
     {
         postApartments: postApartments,
         getApartments: getApartments,
         deleteApartmentbyId: deleteApartmentbyId,
         findById:findById,
-        updateApartment:updateApartment
+        updateApartment: updateApartment,
+        getcurrentUser: getcurrentUser
 
     }
     );
 
 
-<<<<<<< HEAD
 }])
 
 myApp.factory('AdminService',['$q','$http', '$location',function($q,$http,$location)
@@ -299,7 +345,6 @@ myApp.factory('AdminService',['$q','$http', '$location',function($q,$http,$locat
             .success(function (data) {
                 if (data=="success") {
                     $location.path('/admin/index');
-
                 } else {
                     deferred.reject(data);
                 }
@@ -311,16 +356,38 @@ myApp.factory('AdminService',['$q','$http', '$location',function($q,$http,$locat
         return deferred.promise;
     }
 
+    function getApartments()
+    {
+        var promise=$q.defer();
+
+        $http.get('user/admin/apartments')
+            .success(function (response, status) {
+
+                if (status != 200)
+                    promise.reject(response);
+
+
+                promise.resolve(response);
+
+
+            })
+            .error(function (response) {
+                promise.reject(response);
+            });
+
+        // console.log(promise.promise);
+        return promise.promise;
+    }
 
     return(
     {
         registerAdmin:registerAdmin,
-        loginAdmin:loginAdmin
+        loginAdmin:loginAdmin,
+        getApartments:getApartments
     });
 
 
 
 
-=======
->>>>>>> c4f80b8d5ce9b216fe87a459a01475561a5b2cf2
 }])
+

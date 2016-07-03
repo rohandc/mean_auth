@@ -1,5 +1,4 @@
 /*
-
  -Authors:
  -Date:
  -Purpose:
@@ -8,7 +7,6 @@
  @
 
  */
-
 "use strict";
 //dependenciess
 var express = require('express'),
@@ -16,10 +14,13 @@ var express = require('express'),
     passport = require('passport'),
     User = require('../models/user.js'),//Model for User registeration
     Apartment = require('../models/apartment_info.js'),
-
     apt = new Apartment(),//Model for Apartment registeration
     mongoose = require('mongoose'),
-    Admin = require('../models/admin.js');
+    fs = require('fs'),
+    async = require('async'),
+    Admin = require('../models/admin.js'),
+    custom = require('../Custom');
+
 
 //Define Middleware Using ROUTER from EXPRESS
 router.use('/', function (req, res, next) {
@@ -34,7 +35,6 @@ router.post('/register', function (req, res) {
             return res.status(500).json({err: err})
 
         }
-
         passport.authenticate('user')(req, res, function () {
             return res.status(200).json({status: 'Registration successful!'})
         });
@@ -43,26 +43,25 @@ router.post('/register', function (req, res) {
 
 router.post('/login', function (req, res, next) {
 
-    passport.authenticate('local', function (err, user, info) {
-        if (err) {
-            return next(err)
-        }
-        if (!user) {
-            return res.status(401).json({err: info})
-        }
-        req.logIn(user, function (err) {
+
+    passport.authenticate('user', function (err, user, info) {
             if (err) {
-                return res.status(500).json({err: 'Could not log in user'})
+                return next(err)
             }
-            res.status(200).json({status: 'Login successful!'})
-        });
-
-    })(req, res, next);
-
+            if (!user) {
+                return res.status(401).json({err: info})
+            }
+            req.logIn(user, function (err) {
+                if (err) {
+                    return res.status(500).json({err: 'Could not log in user'})
+                }
+                res.status(200).json({status: 'Login successful!'})
+            });
+        }
+    )(req, res, next);
 });
 
 router.get('/logout', function (req, res) {
-
     //res.status(200).json({status: 'Bye!'})
     req.logout();
     req.flash('Success message', 'Logout Successfull');
@@ -84,23 +83,100 @@ router.get('/status', function (req, res) {
     }
 });
 
+
+router.get('/current_user', function (req, res) {
+    if (req.user) {
+        User.findById(req.user.id, function (err, user) {
+            if (err)
+                console.log(err);
+
+            res.status(200).send(user);
+        })
+    }
+
+
+});
+
+
+//Multer test
+var multer = require('multer');
+var profile_pic = [];
+var storage = multer.diskStorage({
+    destination: './client/partials/images/uploads/',
+    filename: function (req, file, cb) {
+        var name = file.originalname;
+        var name1 = name.substring(0, name.lastIndexOf("."));
+        var type = name.substring(name.indexOf("."), name.length);
+        profile_pic.push(name1 + '-' + Date.now() + type);
+        cb(null, name1 + '-' + Date.now() + type);
+    }
+});
+var upload = multer({storage: storage}).any('profile');
+
+router.post('/profileUpdate', function (req, res) {
+
+    var obj = JSON.parse(req.body.data)
+    obj.profile_image = "/partials/images/uploads/" + profile_pic[0];
+
+
+    User.findById(req.user._id, {}, function (err, user) {
+
+        if (err) return next(err);
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User " + req.user.username + " cannot be found"
+            });
+        }
+        fs.stat(__dirname + "/../../client/" + user.profile_image, function (err, file) {
+
+            if (err == null) {
+                fs.unlink(__dirname + "/../../client/" + user.profile_image, function (err) {
+                    if (err)
+                        console.log(err);
+
+                    console.log('successfully deleted file');
+                });
+            }
+            else {
+                console.log(err + " Some error");
+            }
+
+
+        })
+
+
+        // Update the course model
+        user.update(obj, function (error, user) {
+            if (error) return next(error);
+
+            res.send(user);
+            profile_pic = [];
+        });
+
+    });
+
+
+});
+
+
 //End of Routes
+
 //Routes for Aparatments
 
 router.post('/registerApt', function (req, res) {
 
-    var conn = mongoose.connection;
+    var dirname = require('path').dirname(__dirname);
+
+
     var files = req.files;
     var formdata = req.body;
-    var picture = "";
-    for (file in files) {
-        file = files[file];
-        var file_name = custom.generateObjectId("");
-        custom.insertintoDB(file, file_name, function (res) {
+    var picture = custom.prototype.generateObjectId("");
+    files.forEach(function (file) {
+        custom.prototype.insertintoDB(file, picture, function (res) {
             console.log(res);
         });
-        picture += file_name + ",";
-    }
+    });
 
 
     apt.name = formdata.name;
@@ -111,7 +187,7 @@ router.post('/registerApt', function (req, res) {
     apt.country = formdata.country;
     apt.rental_type = formdata.rental_type;
     apt.author = req.user.username;
-    apt.picture = picture.replace(/,\s*$/, "");
+    apt.files = picture;
     apt.price = formdata.price;
     apt.duration = formdata.duration;
     apt.occupants_no = formdata.occupants_no;
@@ -155,6 +231,7 @@ router.get('/getApt', function (req, res) {
         if (err)
             console.log(err);
 
+
         res.send(apartments);
     });
 
@@ -173,7 +250,7 @@ router.delete('/deleteApt/:id', function (req, res) {
 
 });
 
-router.get('/getApt/:id', function (req, res) {
+router.get('/getApt/:id', function (req, res, next) {
 
     /*  Apartment.findOne({_id: req.params.id})
      .populate("aptID")
@@ -203,45 +280,36 @@ router.get('/getApt/:id', function (req, res) {
     var imageObject = [];
 
     Apartment.findOne({_id: req.params.id}).lean().stream()
-        .on ("error", function (error) {
+        .on("error", function (error) {
             console.log(error);
         })
-        .on ("data", function (doc) {
+        .on("data", function (doc) {
             apartment = doc;
 
         })
-        .on ("close", function () {
+        .on("close", function () {
 
-            var images = apartment.picture.split(",");
-            images.forEach(function (image) {
+            console.log(apartment.files);
 
-                custom.readfromDB(image, function (err, response) {
+            custom.prototype.readfromDB(apartment.files, function (err, store) {
+                if (err)
+                    console.log('get file error ===============');
 
-                    if (err)
-                    {
-                        console.log(err);
-                        return;
-                    }
-                    //apartment.picture=apartment.picture+response;
-                    console.log(apartment);
+                apartment.files = store;
+                res.send(apartment);
 
-                    /* apartment.methods.addfile(response, function (resp) {
-                     console.log(resp);
-                     })*/
 
-                })
+            });
 
-            })
-            res.send(apartment);
+
         });
 
 
 });
 
-router.post('/updateApt/:id',function(req,res)
-{
-    var id=req.params.id;
-    var formdata=req.body.data;
+router.post('/updateApt/:id', function (req, res) {
+    var id = req.params.id;
+    var formdata = req.body.data;
     apt.name = formdata.name;
     apt.apartment_no = formdata.apartment_no;
     apt.street_name = formdata.street_name;
@@ -257,20 +325,20 @@ router.post('/updateApt/:id',function(req,res)
     apt.description = formdata.description;
     apt.rank = formdata.rank;
 
-    Apartment.findById(id,function(err,apartment){
+    Apartment.findById(id, function (err, apartment) {
 
-        if(err) return next(err);
+        if (err) return next(err);
 
         // Render not found error
-        if(!apartment) {
+        if (!apartment) {
             return res.status(404).json({
                 message: 'Course with id ' + id + ' can not be found.'
             });
         }
 
         // Update the course model
-        apartment.update(formdata, function(error, apartment) {
-            if(error) return next(error);
+        apartment.update(formdata, function (error, apartment) {
+            if (error) return next(error);
 
             res.send(apartment);
         });
@@ -278,6 +346,20 @@ router.post('/updateApt/:id',function(req,res)
 
     })
 
+
+});
+
+//API to Delete Image from PopUp
+router.post('/deleteimage',function (req,res) {
+
+console.log(req.body);
+
+    var files=req.body;
+
+    files.forEach(function (file) {
+        custom.prototype.deletefromDB(file.id);
+        
+    })
 
 });
 
@@ -292,7 +374,6 @@ router.get('/search/city/:city/type/:type/duration/:duration_id/minprice/:minpri
         //     Apartment.find({city:req.params.city,price:{$gt:req.params.minprice, $lte:req.params.maxprice}, type:req.params.type},callback);
         // }
         // else {
-
         Apartment.find({
             city: req.params.city,
             price: {$gt: req.params.minprice, $lte: req.params.maxprice}
@@ -304,7 +385,6 @@ router.get('/search/city/:city/type/:type/duration/:duration_id/minprice/:minpri
             // console.log(apt);
 
             res.send(apt);
-
 
         });
 
@@ -346,17 +426,16 @@ router.get('/id/:_id',
         });
 
     });
+
 //Routes for Admin
 
 
-router.post('/admin/register', function (req, res,next)
-{
+router.post('/admin/register', function (req, res, next) {
 
-    if(req.user)
-    {
+    if (req.user) {
         req.logOut();
     }
-    Admin.register(new Admin({username:req.body.username}), req.body.password, function (err, account) {
+    Admin.register(new Admin({username: req.body.username}), req.body.password, function (err, account) {
         if (err) {
             return res.status(500).json({err: err})
         }
@@ -369,8 +448,6 @@ router.post('/admin/register', function (req, res,next)
 
 
     res.status(200).json("Redirect");
-
-
 
 
 });
@@ -395,6 +472,17 @@ router.post('/admin/login', function (req, res, next) {
     )(req, res, next);
 });
 
-//console.log(router.stack);
+router.get('/admin/apartments', function (req, res, next) {
+    Apartment.find(function (err, apt) {
 
+        if (err)
+            console.log(err);
+
+        res.send(apt);
+    })
+});
+
+
+//console.log(router.stack);
 module.exports = router;
+module.exports.upload = upload;

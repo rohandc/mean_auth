@@ -1,9 +1,9 @@
 <div class="modal-header">
     <h3 class="modal-title">Edit Data</h3>
 </div>
-<div class="modal-body" >
+<div class="modal-body">
 
-    <form enctype="multipart/form-data" name="apartment"  novalidate="">
+    <form enctype="multipart/form-data" name="apartment" novalidate="">
         <!--apartment.$valid &&-->
 
         <br>
@@ -22,7 +22,7 @@
                     </div>
                     <div class="col-lg-6">
 
-                        <input type="text" name="Name" class="form-control"  ng-model="apt.name" required/>
+                        <input type="text" name="Name" class="form-control" ng-model="apt.name" required/>
 
                         <div ng-class="{'alert alert-danger': apartment.Name.$touched && apartment.Name.$invalid }"
                              ng-messages="apartment.Name.$error"
@@ -39,15 +39,41 @@
                         Pictures :
                     </div>
                     <div class="col-lg-6 controls">
-                        <input type="file" name="image" id="imagebox"
+                        <input type="file" name="image" id="modal_imagebox"
                                onchange="angular.element(this).scope().fileSelected(this.files)"
                                accept="image/*">
-
-                        <div id="imgReview" class="placeholder"></div>
+                        <div id="modal_popup_imgReview" class="placeholder"></div>
+                        <div id="modal_imgReview" class="placeholder"></div>
                     </div>
 
 
                 </div>
+                <br>
+
+                <div class="row">
+
+                    <div class="col-lg-2">
+
+                    </div>
+                    <div class="col-lg-6 controls">
+                        <p ng-if="imageExist">
+                            <img
+                                    ng-repeat="src in imageLocations"
+                                    ng-src="{{ src.value }}"
+                                    Id="{{src.id}}"
+                                    ng-click="delete_modal_image(src.id,src.value)"
+                                    style="width: 100px ; margin-right: 10px ;"
+                            />
+
+                        </p>
+                        <p ng-if="!imageExist">
+                            <strong>No Images Uploaded</strong>
+                        </p>
+                    </div>
+
+
+                </div>
+
 
                 <br>
 

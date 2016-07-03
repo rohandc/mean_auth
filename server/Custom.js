@@ -4,6 +4,8 @@ var custom = function () {
     GridStore = mongoose.mongo.GridStore;
     Grid = require('gridfs-stream');
     fs = require('fs');
+    async = require('async');
+
 
     custom.prototype.initializeMongoose = function (callback) {
         var mongoLocal = "mongodb://localhost/mean-auth"
@@ -37,10 +39,10 @@ var custom = function () {
 
 
     custom.prototype.insertintoDB = function (file, file_id, fn) {
-
+        //Storing file in to database if file is stored on disk
         new GridStore(
             mongoose.connection.db,
-            file_id, file.originalname,
+            file.filename,
             'w',
             {
                 root: 'image',
@@ -56,45 +58,114 @@ var custom = function () {
                 }
             });
 
+        //Storing file into database if file is from buffer
+        /*
+         var gfs = new GridStore(
+         mongoose.connection.db,
+         file.originalname,
+         'w+',
+         {
+         root: 'image',
+         content_type: file.mimetype,
+         metadata: file_id
+         }
+         ).open(function (err, gridstore) {
+         if (err) {
+         return fn(err);
+         }
+
+         gridstore.write(file.buffer, function (err, GS) {
+         console.log("file written");
+         if (err) throw err;
+         GS.close(function (err, result) {
+         if (err) throw err
+         console.log(result);
+         })
+         });
+
+
+         })*/
     }
+
 
     custom.prototype.readfromDB = function (file_id, callback) {
 
-        new GridStore(mongoose.connection.db, file_id, file_id, "r", {root: 'image'})
-            .open(function (err, store) {
+        var files_arr = [];
+        var collection = mongoose.connection.db.collection("image.files");
+        collection.find({'metadata': file_id})
+            .toArray(function (err, files) {
+                if (err)
+                    callback(err, null)
 
-                if (err) {
 
-                    console.log(err);
+                files.forEach(function (file) {
+                    var element = {};
+                    element.id = file._id;
+                    element.name = file.filename;
+                    console.log(file);
+                    var date = new Date();
+                    var file_name = __dirname + "/../client/partials/images/uploads/" + file.filename;
+                    files_arr.push(element);
+                    var writestream = fs.createWriteStream(file_name);
+                    var gridstore = new GridStore(mongoose.connection.db, file._id, "r", {root: 'image'});
+                    gridstore.open(function (err, gridobj) {
+                        if (err)
+                            console.log(err);
+                        var readstream = gridobj.stream(true);
+                        readstream.on('end', function () {
+                            console.log("End Called");
+                        })
+                        readstream.pipe(writestream);
+                    })
 
-                    return callback(err);
-                }
-                else {
 
-                    return callback(null, store);
-                }
-            })
+                })
+
+                callback(null, files_arr);
+            });
+
+
     }
 
 
-    custom.prototype.deletefromDB = function () {
+    custom.prototype.deletefromDB = function (Id, cb) {
         var db = mongoose.connection.db;
 
-        id = parseInt(id);
-        console.log('Deleting GridFile ' + id);
 
-        var store = new GridStore(db, id, id, 'r');
-        store.unlink(function (err, result) {
-            if (err) {
-                console.log('deleteGridFile ERROR ===================');
-                return fn(err);
-            }
+        console.log('Deleting GridFile ' + Id);
+        var gfs = Grid(mongoose.connection.db,mongoose.mongo);
+       /* gfs.collection('image').remove({
+            _id:mongoose.Types.ObjectId(Id)
+        }, function (err) {
+            if (err) console.log(err);
 
-            for (var k in result) {
-                console.log(k);
+            console.log('success ');
+        });*/
+
+
+/*
+        var store = new GridStore(mongoose.connection.db, Id, "w+");
+        store.open(function (err, gridstore) {
+            if(err)
+            {
+                console.log(err)
             }
-            return fn(null);
-        });
+                console.log(gridstore);
+            gridstore.unlink(function (err, result) {
+                if (err) {
+                    console.log('deleteGridFile ERROR ===================>' + err);
+                }
+                GridStore.exist(db, Id, function(err, result) {
+                   if(err)
+                       console.log(err);
+
+                    console.log(result);
+
+                });
+
+            });
+
+        });*/
 
     }
 }

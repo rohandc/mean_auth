@@ -1,21 +1,39 @@
-<div clas="panel panel-primary ">
-    <div class=" col-md-6">
+<body>
 
-        <table class="table table-striped">
-            <tr ng-repeat="apt in apartments">
-                <!--<td>{{apt._id}}</td>-->
-                <td>{{apt.name}}</td>
-                <td>{{apt.apartment_no}}</td>
-
-                <td>
-                    <button class="btn btn-success" ng-click="editapt(apt._id)">&#9998;</button>
-                </td>
-                <td>
-                    <button class="btn btn-danger" ng-click="deleteapt(apt._id)">&times;</button>
-                </td>
-
-            </tr>
-        </table>
-
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <h2 class="navbar-inverse navbar-text">Menu</h2>
+    </div>
+</nav>
+<div class="jumbotron">
+    <div class="container">
+        <h2>Apartments Listing in Admin</h2>
     </div>
 </div>
+<div class="container panel panel-default">
+    <div class="panel-body">
+
+
+    <div class="row" ng-repeat="apt in apartments">
+
+        <span class="col-md-3">
+            {{apt.author}}
+        </span>
+        <span class="col-md-3">
+           {{ apt.name}}
+        </span>
+        <span class="col-md-3">
+            {{apt.address}}
+        </span>
+
+        <button class="btn btn-success" ng-click="editapt(apt._id)">&#9998;</button>
+        <button class="btn btn-danger" ng-click="deleteapt(apt._id)">&times;</button>
+
+    </div>
+    </div>
+</div>
+<footer class="navbar navbar-inverse navbar-fixed-bottom">
+
+</footer>
+</body>
+

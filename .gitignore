@@ -1,5 +1,5 @@
 node_modules
-.idea
-typings 
-blog.md
-
+.idea/
+typings
+.../
+/package.json
