@@ -99,10 +99,13 @@ var custom = function () {
 
 
                 files.forEach(function (file) {
-                    console.log(file);
+                    var element = {};
+                    element.id = file._id;
+                    element.name = file.filename;
+
                     var date = new Date();
                     var file_name = __dirname + "/../client/partials/images/uploads/" + file.filename;
-                    files_arr.push(file_name);
+                    files_arr.push(element);
                     var writestream = fs.createWriteStream(file_name);
                     var gridstore = new GridStore(mongoose.connection.db, file._id, "r", {root: 'image'});
                     gridstore.open(function (err, gridobj) {
@@ -112,10 +115,6 @@ var custom = function () {
                         readstream.on('end', function () {
                             console.log("End Called");
                         })
-                        readstream.on('close', function () {
-                            console.log("Close called")
-                        });
-
                         readstream.pipe(writestream);
                     })
 
@@ -129,25 +128,54 @@ var custom = function () {
     }
 
 
-    custom.prototype.deletefromDB = function () {
+    custom.prototype.deletefromDB = function (file, cb) {
         var db = mongoose.connection.db;
+        console.log('Deleting GridFile ' + file.id);
+        var gfs = Grid(mongoose.connection.db, mongoose.mongo);
+        gfs.collection('image').remove({
+            _id: mongoose.Types.ObjectId(file.id)
+        }, function (err) {
+            if (err) console.log(err);
 
-        id = parseInt(id);
-        console.log('Deleting GridFile ' + id);
-
-        var store = new GridStore(db, id, id, 'r');
-        store.unlink(function (err, result) {
-            if (err) {
-                console.log('deleteGridFile ERROR ===================');
-                return fn(err);
-
-            }
-
-            for (var k in result) {
-                console.log(k);
-            }
-            return fn(null);
+            console.log('success ');
         });
+        var filename = __dirname + "/../client/partials/images/uploads/" + file.name;
+        fs.stat(filename, function (err, exists) {
+
+            if (err)
+                console.log(err)
+
+            fs.unlink(filename, function (err) {
+                if (err) return console.log(err);
+                console.log('file deleted successfully');
+            });
+
+        });
+
+
+        /*
+         var store = new GridStore(mongoose.connection.db, Id, "w+");
+         store.open(function (err, gridstore) {
+         if(err)
+         {
+         console.log(err)
+         }
+         console.log(gridstore);
+         gridstore.unlink(function (err, result) {
+         if (err) {
+         console.log('deleteGridFile ERROR ===================>' + err);
+         }
+         GridStore.exist(db, Id, function(err, result) {
+         if(err)
+         console.log(err);
+
+         console.log(result);
+
+         });
+
+         });
+
+         });*/
 
     }
 }

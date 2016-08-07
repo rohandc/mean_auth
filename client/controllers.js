@@ -17,7 +17,7 @@ angular.module('myApp').controller('loginController',
 
                 // call login from service
                 AuthService.login($scope.loginForm.username, $scope.loginForm.password)
-                    // handle success
+                // handle success
                     .then(function () {
                         $location.path('/');
                         $scope.disabled = false;
@@ -70,7 +70,7 @@ myApp.controller('registerController',
                 $scope.disabled = true;
                 // call register from service
                 AuthService.register($scope.formData.username, $scope.formData.password)
-                    // handle success
+                // handle success
                     .then(function () {
                         console.log("Success inside register Controller");
                         $location.path('/user/login');
@@ -122,6 +122,7 @@ myApp.controller('navbarController', ['$scope', '$location', 'AuthService',
         });
     }]);
 
+//Conrtroller for Apartment CRUD Operations
 myApp.controller('apartmentController', ['$scope', 'ApartmentService', 'UploadService', '$uibModal', '$log', '$anchorScroll', '$location', '$route',
     function ($scope, ApartmentService, UploadService, $uibModal, $log, $anchorScroll, $location, $route) {
         //SPA scrolling to different location
@@ -490,7 +491,7 @@ myApp.controller('apartmentController', ['$scope', 'ApartmentService', 'UploadSe
 
         $scope.imagearray = [];
 
-
+        //Function to Capture Image as soon as image is selected
         $scope.fileSelected = function () {
 
             var files = $("#imagebox").get(0).files;
@@ -536,7 +537,6 @@ myApp.controller('apartmentController', ['$scope', 'ApartmentService', 'UploadSe
         }
 
         //End of Image Upload
-
         $scope.addApartment = function () {
             var formdata = new FormData();
             formdata.append("name", $scope.apt.name);
@@ -547,7 +547,6 @@ myApp.controller('apartmentController', ['$scope', 'ApartmentService', 'UploadSe
             formdata.append("country", $scope.apt.country);
             formdata.append("rental_type", $scope.apt.rental_type);
             formdata.append("author", $scope.apt.author);
-            formdata.append("picture", "");
             formdata.append("price", 666.66);
             formdata.append("duration", $scope.apt.duration);
             formdata.append("occupants_no", $scope.apt.occupants_no);
@@ -578,7 +577,6 @@ myApp.controller('apartmentController', ['$scope', 'ApartmentService', 'UploadSe
         $scope.$on("updateApartment", function () {
 
             $scope.initialize();
-            console.log($scope);
             $scope.apartment.name = "";
             $scope.apartment.apartment_no = "";
             $scope.apartment.street_name = "";
@@ -657,25 +655,14 @@ myApp.controller('apartmentController', ['$scope', 'ApartmentService', 'UploadSe
             console.log($scope.files);
         }
 
-
-        //$scope.onSelectFile = function ($files) {
-        //    for (var i = 0; i < $files.length; i++) {
-        //        var $file = $files[i];
-        //        $upload.upload({
-        //                url: 'api/HomeControler/upload',
-        //                file: $file
-        //            })
-        //            .then(function (data, status, headers, config) {
-        //                alert('file is uploaded successfully');
-        //            });
-        //    }
-        //}
-
     }]);
 
-//Controller to edit/update data
+//Controller to edit/update data for Modal PopUp
+myApp.controller('ModalInstanceCtrl', function (ApartmentService, $rootScope, $scope, $uibModalInstance, apt, $http) {
+    var formdata = new FormData();
 
-myApp.controller('ModalInstanceCtrl', function (ApartmentService, $rootScope, $scope, $uibModalInstance, apt) {
+    //Array Containing FIle list to be Deleted
+    $scope.image_delete = [];
 
     //For filling list of Countries
     $scope.countries = [
@@ -924,57 +911,81 @@ myApp.controller('ModalInstanceCtrl', function (ApartmentService, $rootScope, $s
         {name: 'Zimbabwe', code: 'ZW'}
     ];
 
-    function imgPreview(file) {
-
-        if (/\.(jpe?g|png|gif)$/i.test(file.filename)) {
-            var reader = new FileReader();
-            var preview = $('#modal_imgReview');
-            reader.readAsText(file);
-            reader.addEventListener("load", function (e) {
-                console.log(e);
-                var img = $('<img  />', {
-                    src: e.target.result,
-                    class: "imageThumb",
-                    name: file.name,
-                    onClick: "angular.element(this).scope().delete(this)"
-                });
-                preview.append(img);
-            }, false);
-
-        }
-    }
-
     //End of List
+
+    //Variable for fail safe if no images exist from Database
+    $scope.isSuccessful = false;
+    $scope.apt = apt;
+    $scope.imageLocations = [];
+
+    $scope.imagearray = [];
+    $scope.imageExist = false;
     if (apt.files != undefined || apt.files) {
+        $scope.imageExist = true;
         apt.files.forEach(function (file) {
-            imgPreview(file);
+            var element = {};
+            element.id = file.id;
+            element.value = "partials/images/uploads/" + file.name;
+            $scope.imageLocations.push(element);
         });
+
     }
 
-    $scope.apt = apt;
-    console.log($scope.apt);
+    /* $scope.fileSelected = function () {
+     var files = $("#modal_imagebox").get(0).files;
+     var target = $('#modal_popup_imgReview');
+     for (var i = 0; i < files.length; i++) {
+     var file = files[i];
+     var imageType = /image.*!/;
+     var reader = new FileReader();
+     if (file.type.match(imageType)) {
 
+     reader.readAsDataURL(file);
+     reader.addEventListener("load", function (e) {
+     console.log(e);
+     var img = $('<img  />', {
+     src: e.target.result,
+     class: "imageThumb",
+     name: file.name,
+     onClick: "angular.element(this).scope().delete(this)"
+     });
+     target.append(img);
+     }, false);
+
+     $scope.imagearray.push(file);
+     console.log($scope.imagearray);
+     }
+     else {
+     console.error("File not Supported")
+     }
+     }
+
+     //console.log($scope.imagearray);
+     }*/
 
     $scope.ok = function () {
+        var formdata = new FormData();
+        formdata.entries("name", $scope.apt.name);
+        formdata.append("apartment_no", $scope.apt.apartment_no);
+        formdata.append("street_name", $scope.apt.street_name);
+        formdata.append("city", $scope.apt.city);
+        formdata.append("postal_code", $scope.apt.postal_code);
+        formdata.append("country", $scope.apt.country);
+        formdata.append("rental_type", $scope.apt.rental_type);
+        formdata.append("author", $scope.apt.author);
+        formdata.append("price", 666.66);
+        formdata.append("duration", $scope.apt.duration);
+        formdata.append("occupants_no", $scope.apt.occupants_no);
+        formdata.append("description", "");
+        formdata.append("rank", 7);
+        for (let i = 0; i < $scope.imagearray.length; i++) {
+            formdata.append('files' + i, $scope.imagearray[i]);
+        }
 
-        var editdata = {};
-        editdata.name = $scope.apt.name;
-        editdata.apartment_no = $scope.apt.apartment_no;
-        editdata.street_name = $scope.apt.street_name;
-        editdata.city = $scope.apt.city;
-        editdata.postal_code = $scope.apt.postal_code;
-        editdata.country = $scope.apt.country;
-        editdata.rental_type = $scope.apt.rental_type;
-        editdata.author = $scope.apt.author;
-        editdata.picture = "";
-        editdata.price = 777.66;
-        editdata.duration = $scope.apt.duration;
-        editdata.occupants_no = $scope.apt.occupants_no;
-        editdata.description = "";
-        editdata.rank = 7;
 
-        ApartmentService.updateApartment($scope.apt._id, editdata)
+        ApartmentService.updateApartment($scope.apt._id, formdata)
             .then(function (success) {
+                $http.post('/user/deleteimage', $scope.image_delete)
                 $rootScope.$broadcast('updateApartment');
                 $uibModalInstance.close();
             });
@@ -986,6 +997,46 @@ myApp.controller('ModalInstanceCtrl', function (ApartmentService, $rootScope, $s
         $uibModalInstance.dismiss('cancel');
     };
 
+    $scope.delete_modal_image = function (Id, Name) {
+        Name = Name.substr(Name.lastIndexOf('/') + 1, Name.length);
+        var element = {};
+        element.id = Id;
+        element.name = Name;
+        $("img[id='" + Id + "']").remove();
+        $scope.image_delete.push(element);
+    }
+
+    $scope.fileSelected = function () {
+
+        var files = $("#modal_imagebox").get(0).files;
+        var target = $('#modal_imgReview');
+        for (var i = 0; i < files.length; i++) {
+
+            var file = files[i];
+            var imageType = /image.*/;
+            var reader = new FileReader();
+            if (file.type.match(imageType)) {
+
+                $scope.imagearray.push(file);
+                reader.readAsDataURL(file);
+                reader.addEventListener("load", function (e) {
+                    console.log(e);
+                    var img = $('<img  />', {
+                        src: e.target.result,
+                        class: "imageThumb",
+                        name: file.name,
+                        onClick: "angular.element(this).scope().delete(this)"
+                    });
+                    target.append(img);
+                }, false);
+
+            }
+            else {
+                console.error("File not Supported")
+            }
+        }
+
+    }
 
 });
 

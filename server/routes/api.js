@@ -161,6 +161,7 @@ router.post('/profileUpdate', function (req, res) {
 
 
 //End of Routes
+
 //Routes for Aparatments
 
 router.post('/registerApt', function (req, res) {
@@ -192,23 +193,6 @@ router.post('/registerApt', function (req, res) {
     apt.occupants_no = formdata.occupants_no;
     apt.description = formdata.description;
     apt.rank = formdata.rank;
-
-    /*Apartment=new Apartment({
-     name:formdata.name,
-     apartment_no: formdata.apartment_no,
-     street_name: formdata.street_name,
-     city: formdata.city,
-     postal_code: formdata.postal_code,
-     country: formdata.country,
-     rental_type: formdata.rental_type,
-     author: req.username,
-     picture: req.files.originalname,
-     price: formdata.price,
-     duration: formdata.duration,
-     occupants_no: formdata.occupants_no,
-     description: formdata.description,
-     rank: formdata.rank
-     });*/
 
     apt.save(function (err, success) {
         if (err) {
@@ -251,29 +235,6 @@ router.delete('/deleteApt/:id', function (req, res) {
 
 router.get('/getApt/:id', function (req, res, next) {
 
-    /*  Apartment.findOne({_id: req.params.id})
-     .populate("aptID")
-     .exec(
-     function (err, apts) {
-     debugger;
-     if (err) {
-     console.log(err);
-     res.send({status: 500, message: "Error Apartment not Found"});
-     }
-     imageObject = [];
-     var images = apts.picture.split(",");
-     images.forEach(function (image) {
-     custom.readfromDB(image, function (err, response) {
-     if (err)
-     console.log(err);
-
-     imageObject.push(response);
-     console.log(imageObject);
-     })
-     console.log(imageObject);
-     })
-     // res.send(apts);
-     });*/
 
     var apartment;
     var imageObject = [];
@@ -308,21 +269,22 @@ router.get('/getApt/:id', function (req, res, next) {
 
 router.post('/updateApt/:id', function (req, res) {
     var id = req.params.id;
-    var formdata = req.body.data;
-    apt.name = formdata.name;
-    apt.apartment_no = formdata.apartment_no;
-    apt.street_name = formdata.street_name;
-    apt.city = formdata.city;
-    apt.postal_code = formdata.postal_code;
-    apt.country = formdata.country;
-    apt.rental_type = formdata.rental_type;
-    apt.author = req.username;
-    apt.picture = "";
-    apt.price = formdata.price;
-    apt.duration = formdata.duration;
-    apt.occupants_no = formdata.occupants_no;
-    apt.description = formdata.description;
-    apt.rank = formdata.rank;
+    var formdata = req.body;
+    var files = req.files;
+    /*    apt.name = formdata.name;
+     apt.apartment_no = formdata.apartment_no;
+     apt.street_name = formdata.street_name;
+     apt.city = formdata.city;
+     apt.postal_code = formdata.postal_code;
+     apt.country = formdata.country;
+     apt.rental_type = formdata.rental_type;
+     apt.author = req.username;
+     apt.price = formdata.price;
+     apt.duration = formdata.duration;
+     apt.occupants_no = formdata.occupants_no;
+     apt.description = formdata.description;
+     apt.rank = formdata.rank;
+     */
 
     Apartment.findById(id, function (err, apartment) {
 
@@ -334,10 +296,18 @@ router.post('/updateApt/:id', function (req, res) {
                 message: 'Course with id ' + id + ' can not be found.'
             });
         }
+        //Update New Images over Here
+
+        files.forEach(function (file) {
+            custom.prototype.insertintoDB(file, apartment.files, function (res) {
+                console.log(res);
+            });
+        });
+
 
         // Update the course model
         apartment.update(formdata, function (error, apartment) {
-            if (error) return next(error);
+            if (error) console.log(error);
 
             res.send(apartment);
         });
@@ -345,6 +315,20 @@ router.post('/updateApt/:id', function (req, res) {
 
     })
 
+
+});
+
+//API to Delete Image from PopUp
+router.post('/deleteimage', function (req, res) {
+
+    console.log(req.body);
+
+    var files = req.body;
+
+    files.forEach(function (file) {
+        custom.prototype.deletefromDB(file);
+
+    })
 
 });
 

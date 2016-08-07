@@ -199,11 +199,7 @@ myApp.factory('ApartmentService', ['$q', '$http',function ($q, $http) {
                 'Content-Type': undefined
             },
             data: formdata
-        })
-
-
-        //.post('/user/registerApt', formdata,)
-            .success(function (response, status) {
+        }).success(function (response, status) {
                 if (status === 200) {
                     promise.resolve(response);
                 } else {
@@ -258,11 +254,14 @@ myApp.factory('ApartmentService', ['$q', '$http',function ($q, $http) {
        console.log("Inside Update Apartments Debugging  ------->");
 
         var promise = $q.defer();
-        $http.post('/user/updateApt/'+id,{
+
+        $http({
+            url: '/user/updateApt/' + id,
+            method: 'POST',
             headers: {
                 'Content-Type': undefined
             },
-            data:formdata
+            data: formdata
         })  .success(function (response, status) {
                 if (status === 200) {
                     promise.resolve(response);
