@@ -5175,6 +5175,7 @@
 ::1 - - [01/Jul/2016:22:17:33 +0000] "GET /user/getApt HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"
 ::1 - - [01/Jul/2016:22:17:33 +0000] "GET /user/current_user HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"
 ::1 - - [01/Jul/2016:22:27:57 +0000] "GET /user/getApt/57674ef0baa47b940dfea2c8 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"
+<<<<<<< HEAD
 ::1 - - [03/Jul/2016:23:07:05 +0000] "GET /user/status HTTP/1.1" 500 42 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"
 ::1 - - [03/Jul/2016:23:07:09 +0000] "POST /user/login HTTP/1.1" 200 30 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"
 ::1 - - [03/Jul/2016:23:07:09 +0000] "GET /user/status HTTP/1.1" 200 226 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"
@@ -5641,3 +5642,5 @@
 ::1 - - [19/Jul/2016:01:40:22 +0000] "GET /user/current_user HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"
 ::1 - - [19/Jul/2016:01:40:46 +0000] "GET /user/getApt/56eb0f4e703b6f780eff6b35 HTTP/1.1" 200 392 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"
 ::1 - - [07/Aug/2016:20:35:58 +0000] "GET /user/status HTTP/1.1" 500 42 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"
+=======
+>>>>>>> f84a076d704e728297143cd7fa73b87aa3492521

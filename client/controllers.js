@@ -1,4 +1,4 @@
-﻿//Login Controller
+//Login Controller
 
 var myApp = angular.module('myApp');
 

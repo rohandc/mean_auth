@@ -6,3 +6,4 @@ typings
 /client/partials/images/uploads/*.
 /*.log
 /*.xml
+/server/access.log
