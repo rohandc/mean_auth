@@ -1,5 +1,3 @@
-/// <reference path="../Scripts/typings/tsd.d.ts" />
-
 var myApp = angular.module('myApp', ['ngRoute', 'ui.bootstrap', 'ngMessages', 'ngFileUpload']);
 //Do Dependency Injection for plugins here
 
