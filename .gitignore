@@ -3,3 +3,5 @@ node_modules
 typings
 .../
 /package.json
+/client/partials/images/uploads/*.
+/*.log
