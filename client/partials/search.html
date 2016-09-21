@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results</title>
+
+</head>
+<body>
+<div>
+    <header class="site-header">
+        <nav class="navbar">
+            <h1>Rent My Space</h1>
+            <h1 ng-show="isloggedIn"> {{username}} </h1>
+            <ul>
+                <li class="bind">
+                    <a class="drpdown "><img src="images/search.png">Search
+                        <section class="search">
+                            <h1>Search for properties</h1>
+                            <div class="row1">
+                                <input type="text" id="location"
+                                       placeholder="Where are you looking for your space? Try a city or post id."
+                                       ng-model="searchtext">
+                            </div>
+                            <div class="row1">
+
+                                <select id="rentType" placeholder="Rental Type" ng-model="rentType">
+                                    <option value="Type" disabled="disabled" selected="selected">Rental Type</option>
+                                    <option value="House">House</option>
+                                    <option value="Apartment">Apartment</option>
+                                    <option value="Room">Room</option>
+                                    <option value="Garage">Garage</option>
+                                    <option value="Storage">Storage</option>
+                                    </optgroup>
+                                </select>
+
+                                <select id="minPrice" ng-model="minPrice">
+                                    <option>Min Price</option>
+                                    <option value="0">0</option>
+                                    <option value="100">100$</option>
+                                    <option value="200">200$</option>
+                                    <option value="300">300$</option>
+                                    <option value="400">400$</option>
+                                    <option value="500">500$</option>
+                                    <option value="600">600$</option>
+                                    <option value="700">700$</option>
+                                    <option value="800">800$</option>
+                                    <option value="900">900$</option>
+                                    <option value="1000">1000$</option>
+                                    <option value=">1000">>1000$</option>
+
+                                </select>
+
+
+                                <select id="maxPrice" ng-model="maxPrice">
+                                    <option>Max Price</option>
+                                    <option value="0">0</option>
+                                    <option value="100">100$</option>
+                                    <option value="200">200$</option>
+                                    <option value="300">300$</option>
+                                    <option value="400">400$</option>
+                                    <option value="500">500$</option>
+                                    <option value="600">600$</option>
+                                    <option value="700">700$</option>
+                                    <option value="800">800$</option>
+                                    <option value="900">900$</option>
+                                    <option value="1000">1000$</option>
+                                    <option value=">1000">>1000$</option>
+                                </select>
+
+
+                            </div>
+                            <div class="row1">
+                                <select id="duration" ng-model="duration">
+                                    <option value="Type" disabled="disabled" selected="selected">Duration</option>
+                                    <option value="<1hour">1 hour</option>
+                                    <option value="<6hours"> 6 hours</option>
+                                    <option value="1-7days">1-7 days</option>
+                                    <option value=">week">Week</option>
+                                    <option value=">month">Month</option>
+
+                                </select>
+
+                                <select id="rating" ng-model="rating">
+                                    <option value="Type" disabled="disabled" selected="selected">Rating</option>
+                                    <option value="1">1<</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+
+                            </div>
+                            <div class="row1">
+                                <input type="submit" value="Search" class="btnSearch" ng-click="search()">
+
+                                <!--<hr style="margin-top:40px;">-->
+                            </div>
+                        </section>
+                    </a>
+                </li>
+                <li ng-show="!isloggedIn"><a href="/#/login" id="logInBtn"><img src="images/signIn.png">Sign In</a></li>
+                <li ng-show="isloggedIn"><a href="/user/logout" id="logOutBtn"><img src="images/signIn.png">Sign Out</a>
+                </li>
+                <li ng-show="isloggedIn">
+                    <a href="/#/apartmentinfo"><img width="60" height="50"
+                                                    src="http://www.clipartbest.com/cliparts/RiG/4xR/RiG4xR6iL.png"/>Enter
+                        Info</a></li>
+                <li><a href="/#/"><img src="images/contact.png">Contact</a></li>
+            </ul>
+
+            <div id="site-header-bigg-social">
+                <ul class="horizontal-list">
+                    <li><a href="https://twitter.com/opendesigns" target="_blank"
+                           class="bigg-social-twitter bigg-social-icon image-replace">Twitter</a></li>
+                    <li><a href="http://www.facebook.com/opendesigns/" target="_blank"
+                           class="bigg-social-fb bigg-social-icon image-replace">Facebook</a></li>
+                    <li><a href="https://plus.google.com/101703942483092652776/posts" target="_blank"
+                           class="bigg-social-gplus bigg-social-icon image-replace">Google+</a></li>
+                </ul>
+
+            </div>
+        </nav>
+    </header>
+    <div id="content">
+        <section class="col-md-4" style="background-color: blue;">
+            <div style="height:100%;position: absolute;
+       top: 40px;       bottom: 20px;width: 100%; ">
+                test
+            </div>
+        </section>
+        <section class="col-md-8" style=" background-color: red;">
+            <div style="height:100%;">
+                test
+            </div>
+        </section>
+    </div>
+</div>
+</body>
+</html>

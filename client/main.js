@@ -17,6 +17,11 @@ myApp.config(function ($routeProvider, $locationProvider) {
             access: {restricted: false}
 
         })
+        .when('/search', {
+            templateUrl: 'partials/search.html',
+            controller: 'searchController',
+            access: {restricted: false}
+        })
         .when('/logout', {
             controller: 'logoutController',
             access: {restricted: false}

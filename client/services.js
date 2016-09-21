@@ -10,13 +10,13 @@ myApp.factory('UploadService', ['$http', function ($http) {
         });
         fd.append('data', JSON.stringify(data));
         $http.post(url, fd, {
-                transformRequest: angular.identity,
-                withCredentials: false,
-                headers: {
-                    'Content-Type': undefined
-                }
+            transformRequest: angular.identity,
+            withCredentials: false,
+            headers: {
+                'Content-Type': undefined
+            }
 
-            })
+        })
             .success(function (data) {
                 console.log(data);
                 success(data);
@@ -30,14 +30,14 @@ myApp.factory('UploadService', ['$http', function ($http) {
     return ({
         uploadfile: uploadfile
     })
-}])
+}]);
 
 myApp.factory('AuthService',
     ['$q', '$timeout', '$http',
         function ($q, $timeout, $http) {
 
             //console.log("Inside Authservice Debugging");
-           var user = null;
+            var user = null;
 
 
             function getUserStatus() {
@@ -69,7 +69,7 @@ myApp.factory('AuthService',
 
                 // send a post request to the server
                 $http.post('/user/login', {username: username, password: password})
-                    // handle success
+                // handle success
                     .success(function (data, status) {
                         if (status === 200 && data.status) {
                             user = true;
@@ -98,7 +98,7 @@ myApp.factory('AuthService',
 
                 // send a get request to the server
                 $http.get('/user/logout')
-                    // handle success
+                // handle success
                     .success(function (data) {
                         console.log(data + " Inside success of logout");
                         user = false;
@@ -131,7 +131,7 @@ myApp.factory('AuthService',
 
                 // send a post request to the server
                 $http.post('/user/register', {username: username, password: password})
-                    // handle success
+                // handle success
                     .success(function (data, status) {
                         if (status === 200 && data.status) {
                             deferred.resolve();
@@ -160,7 +160,7 @@ myApp.factory('AuthService',
             });
         }]);
 
-myApp.factory('ApartmentService', ['$q', '$http',function ($q, $http) {
+myApp.factory('ApartmentService', ['$q', '$http', function ($q, $http) {
 
     console.log('Inside Apartment Service Debugging');
 
@@ -200,12 +200,12 @@ myApp.factory('ApartmentService', ['$q', '$http',function ($q, $http) {
             },
             data: formdata
         }).success(function (response, status) {
-                if (status === 200) {
-                    promise.resolve(response);
-                } else {
-                    promise.reject(response);
-                }
-            })
+            if (status === 200) {
+                promise.resolve(response);
+            } else {
+                promise.reject(response);
+            }
+        })
             .error(function (data) {
                 promise.reject(data);
 
@@ -214,22 +214,19 @@ myApp.factory('ApartmentService', ['$q', '$http',function ($q, $http) {
         return promise.promise;
     }
 
-    function deleteApartmentbyId(id)
-    {
-        var promise=$q.defer();
-        $http.delete("/user/deleteApt/"+id)
-        .success(function (response)
-        {
-            promise.resolve(response);
-        });
+    function deleteApartmentbyId(id) {
+        var promise = $q.defer();
+        $http.delete("/user/deleteApt/" + id)
+            .success(function (response) {
+                promise.resolve(response);
+            });
 
-       return promise.promise;
+        return promise.promise;
     }
 
-    function findById(id)
-    {
-        var promise=$q.defer();
-        $http.get("/user/getApt/"+id)
+    function findById(id) {
+        var promise = $q.defer();
+        $http.get("/user/getApt/" + id)
             .success(function (response, status) {
 
                 if (status != 200)
@@ -249,9 +246,8 @@ myApp.factory('ApartmentService', ['$q', '$http',function ($q, $http) {
 
     }
 
-    function updateApartment(id,formdata)
-    {
-       console.log("Inside Update Apartments Debugging  ------->");
+    function updateApartment(id, formdata) {
+        console.log("Inside Update Apartments Debugging  ------->");
 
         var promise = $q.defer();
 
@@ -262,13 +258,13 @@ myApp.factory('ApartmentService', ['$q', '$http',function ($q, $http) {
                 'Content-Type': undefined
             },
             data: formdata
-        })  .success(function (response, status) {
-                if (status === 200) {
-                    promise.resolve(response);
-                } else {
-                    promise.reject(response);
-                }
-            })
+        }).success(function (response, status) {
+            if (status === 200) {
+                promise.resolve(response);
+            } else {
+                promise.reject(response);
+            }
+        })
             .error(function (data) {
                 promise.reject(data);
 
@@ -300,7 +296,7 @@ myApp.factory('ApartmentService', ['$q', '$http',function ($q, $http) {
         postApartments: postApartments,
         getApartments: getApartments,
         deleteApartmentbyId: deleteApartmentbyId,
-        findById:findById,
+        findById: findById,
         updateApartment: updateApartment,
         getcurrentUser: getcurrentUser
 
@@ -308,21 +304,18 @@ myApp.factory('ApartmentService', ['$q', '$http',function ($q, $http) {
     );
 
 
-}])
+}]);
 
-myApp.factory('AdminService',['$q','$http', '$location',function($q,$http,$location)
-{
+myApp.factory('AdminService', ['$q', '$http', '$location', function ($q, $http, $location) {
 
-    function  registerAdmin(username, password)
-    {
-        console.log("Inside Admin service register");
+    function registerAdmin(username, password) {
         var deferred = $q.defer();
 
         $http.post('user/admin/register', {username: username, password: password})
             .success(function (data) {
-                if (data=="Redirect") {
+                if (data == "Redirect") {
                     $location.path('/admin/login');
-                   // deferred.resolve(data);
+                    // deferred.resolve(data);
                 } else {
                     deferred.reject();
                 }
@@ -335,14 +328,13 @@ myApp.factory('AdminService',['$q','$http', '$location',function($q,$http,$locat
     }
 
 
-    function  loginAdmin(username, password)
-    {
+    function loginAdmin(username, password) {
         console.log("Inside Admin service login");
         var deferred = $q.defer();
 
         $http.post('user/admin/login', {username: username, password: password})
             .success(function (data) {
-                if (data=="success") {
+                if (data == "success") {
                     $location.path('/admin/index');
                 } else {
                     deferred.reject(data);
@@ -355,9 +347,8 @@ myApp.factory('AdminService',['$q','$http', '$location',function($q,$http,$locat
         return deferred.promise;
     }
 
-    function getApartments()
-    {
-        var promise=$q.defer();
+    function getApartments() {
+        var promise = $q.defer();
 
         $http.get('user/admin/apartments')
             .success(function (response, status) {
@@ -378,15 +369,32 @@ myApp.factory('AdminService',['$q','$http', '$location',function($q,$http,$locat
         return promise.promise;
     }
 
-    return(
+    return (
     {
-        registerAdmin:registerAdmin,
-        loginAdmin:loginAdmin,
-        getApartments:getApartments
+        registerAdmin: registerAdmin,
+        loginAdmin: loginAdmin,
+        getApartments: getApartments
     });
 
 
+}]);
 
-
-}])
-
+myApp.factory('SearchService', ['$q', '$http', function ($q, $http) {
+    var promise = $q.defer();
+    var search = {};
+    search.getLocalResults = function (data) {
+        $http({
+            method: 'GET',
+            url: '/user/search',
+            params: data // Works to pass data to backend for search query
+        })
+            .success(function (data) {
+                promise.resolve(data);
+            })
+            .error(function () {
+                promise.reject();
+            });
+        return promise;
+    }
+    return search;
+}]);

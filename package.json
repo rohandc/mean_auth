@@ -2,7 +2,8 @@
   "name": "mean-auth",
   "scripts": {
     "start": "node server/server.js",
-    "debug": "node-debug server/server.js"
+    "debug": "node-debug server/server.js",
+    "nodemon": "nodemon --debug-brk server.js"
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",

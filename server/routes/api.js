@@ -8,7 +8,7 @@
 
  */
 "use strict";
-//dependenciess
+//Dependencies
 var express = require('express'),
     router = express.Router(),
     passport = require('passport'),
@@ -24,10 +24,11 @@ var express = require('express'),
 
 //Define Middleware Using ROUTER from EXPRESS
 router.use('/', function (req, res, next) {
-    // req.path will be the req.url with the /users prefix stripped
     console.log("Inside API_JS using Router : " + req.path + " || " + req.url);
     next();
 });
+
+
 //Routes for User Authorization
 router.post('/register', function (req, res) {
     User.register(new User({username: req.body.username}), req.body.password, function (err, account) {
@@ -62,9 +63,7 @@ router.post('/login', function (req, res, next) {
 });
 
 router.get('/logout', function (req, res) {
-    //res.status(200).json({status: 'Bye!'})
     req.logout();
-    req.flash('Success message', 'Logout Successfull');
     res.redirect('/');
 
 });
@@ -162,7 +161,46 @@ router.post('/profileUpdate', function (req, res) {
 
 //End of Routes
 
-//Routes for Aparatments
+//Routes for search
+
+router.get('/search', function (req, res) {
+    var query = req.query;
+    console.log(query);
+    var terms = query.searchText.split(' ');
+    var regexString = "";
+
+    for (var i = 0; i < terms.length; i++) {
+        regexString += terms[i];
+        if (i < terms.length - 1) regexString += '|';
+    }
+
+    var re = new RegExp(regexString, 'ig');
+
+
+    Apartment.find(/*{
+     $or: [{
+     rank: parseInt(query.rating),
+     rental_type: query.rentType,
+     duration: parseInt(query.duration),
+     price: {'$gte': 233, '$lte': 213},
+     apartment_no:re,
+     street_name:re,
+     city:re,
+     country:re,
+     postal_code:re
+     }]
+     },*/ function (err, apt) {
+        if (err)
+            console.log(err);
+
+        res.send(apt);
+
+    });
+
+});
+
+
+//Routes for Apartments
 
 router.post('/registerApt', function (req, res) {
 
@@ -193,7 +231,6 @@ router.post('/registerApt', function (req, res) {
     apt.occupants_no = formdata.occupants_no;
     apt.description = formdata.description;
     apt.rank = formdata.rank;
-
     apt.save(function (err, success) {
         if (err) {
             console.log("Error :" + err);
@@ -233,7 +270,7 @@ router.delete('/deleteApt/:id', function (req, res) {
 
 });
 
-router.get('/getApt/:id', function (req, res, next) {
+router.get('/getApt/:id', function (req, res) {
 
 
     var apartment;
@@ -271,26 +308,11 @@ router.post('/updateApt/:id', function (req, res) {
     var id = req.params.id;
     var formdata = req.body;
     var files = req.files;
-    /*    apt.name = formdata.name;
-     apt.apartment_no = formdata.apartment_no;
-     apt.street_name = formdata.street_name;
-     apt.city = formdata.city;
-     apt.postal_code = formdata.postal_code;
-     apt.country = formdata.country;
-     apt.rental_type = formdata.rental_type;
-     apt.author = req.username;
-     apt.price = formdata.price;
-     apt.duration = formdata.duration;
-     apt.occupants_no = formdata.occupants_no;
-     apt.description = formdata.description;
-     apt.rank = formdata.rank;
-     */
 
     Apartment.findById(id, function (err, apartment) {
 
         if (err) return next(err);
 
-        // Render not found error
         if (!apartment) {
             return res.status(404).json({
                 message: 'Course with id ' + id + ' can not be found.'
@@ -304,8 +326,6 @@ router.post('/updateApt/:id', function (req, res) {
             });
         });
 
-
-        // Update the course model
         apartment.update(formdata, function (error, apartment) {
             if (error) console.log(error);
 
@@ -317,6 +337,7 @@ router.post('/updateApt/:id', function (req, res) {
 
 
 });
+
 
 //API to Delete Image from PopUp
 router.post('/deleteimage', function (req, res) {
@@ -333,42 +354,32 @@ router.post('/deleteimage', function (req, res) {
 });
 
 //End of Routes
-//GET REQUEST ON CLICK SEARCH ADDED BY EUGENE
-router.get('/search/city/:city/type/:type/duration/:duration_id/minprice/:minprice/maxprice/:maxprice/rank/:rank',
-    function (req, res) {
-        // if(req.params.city && req.params.type=='undefined' && req.params.duration=='undefined' && req.params.minprice==null && req.params.maxprice==null && req.params.rank==null) {
-        //     Apartment.find({city:req.params.city},callback);
-        // }
-        // if(req.params.city && req.params.type && req.params.minprice && req.params.maxprice) {
-        //     Apartment.find({city:req.params.city,price:{$gt:req.params.minprice, $lte:req.params.maxprice}, type:req.params.type},callback);
-        // }
-        // else {
-        Apartment.find({
-            city: req.params.city,
-            price: {$gt: req.params.minprice, $lte: req.params.maxprice}
-        }, function callback(err, apt) {
-            if (err)
-                console.log(err);
-            // res.send(err);
-            // debugger;
-            // console.log(apt);
 
-            res.send(apt);
+/*router.get('/search/city/:city/type/:type/duration/:duration_id/minprice/:minprice/maxprice/:maxprice/rank/:rank',
+ function (req, res) {
+ // if(req.params.city && req.params.type=='undefined' && req.params.duration=='undefined' && req.params.minprice==null && req.params.maxprice==null && req.params.rank==null) {
+ //     Apartment.find({city:req.params.city},callback);
+ // }
+ // if(req.params.city && req.params.type && req.params.minprice && req.params.maxprice) {
+ //     Apartment.find({city:req.params.city,price:{$gt:req.params.minprice, $lte:req.params.maxprice}, type:req.params.type},callback);
+ // }
+ // else {
+ Apartment.find({
+ city: req.params.city,
+ price: {$gt: req.params.minprice, $lte: req.params.maxprice}
+ }, function (err, apt) {
+ if (err)
+ console.log(err);
 
-        });
+ res.send(apt);
 
-    });
+ });
+
+ });*/
 
 
 router.get('/id/:_id',
     function (req, res) {
-        // if(req.params.city && req.params.type=='undefined' && req.params.duration=='undefined' && req.params.minprice==null && req.params.maxprice==null && req.params.rank==null) {
-        //     Apartment.find({city:req.params.city},callback);
-        // }
-        // if(req.params.city && req.params.type && req.params.minprice && req.params.maxprice) {
-        //     Apartment.find({city:req.params.city,price:{$gt:req.params.minprice, $lte:req.params.maxprice}, type:req.params.type},callback);
-        // }
-        // else {
         Apartment.find({"_id": req.params._id}, {
             _id: 0,
             apartment_no: 1,
@@ -397,7 +408,6 @@ router.get('/id/:_id',
     });
 
 //Routes for Admin
-
 
 router.post('/admin/register', function (req, res, next) {
 

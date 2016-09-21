@@ -100,12 +100,13 @@ myApp.controller('registerController',
         }
     });
 
+//Controller for Searching Apartments and Displaying Login Status
+myApp.controller('navbarController', ['$scope', '$location', 'AuthService', 'SearchService',
+    function ($scope, $location, AuthService, SearchService) {
 
-myApp.controller('navbarController', ['$scope', '$location', 'AuthService',
-    function ($scope, $location, AuthService) {
+
         var data = {};
         var promise = AuthService.getUserStatus();
-
         promise.then(function (response) {
             console.log(response);
             console.log(response.data);
@@ -119,10 +120,27 @@ myApp.controller('navbarController', ['$scope', '$location', 'AuthService',
             }
 
 
+        }).catch(function (err) {
+            console.log(err);
         });
+        $scope.search = function () {
+            var query = {}
+            query.searchText = $scope.searchtext || 'Toronto';
+            query.rentType = $scope.rentType || 'Apartment';
+            query.minPrice = $scope.minPrice || 0;
+            query.maxPrice = $scope.maxPrice || 2000;
+            query.duration = $scope.duration || 24;
+            query.rating = $scope.rating || 5;
+            SearchService.getLocalResults(query);
+
+        }
     }]);
 
-//Conrtroller for Apartment CRUD Operations
+myApp.controller('searchController', [function () {
+
+}]);
+
+//Controller for Apartment CRUD Operations
 myApp.controller('apartmentController', ['$scope', 'ApartmentService', 'UploadService', '$uibModal', '$log', '$anchorScroll', '$location', '$route',
     function ($scope, ApartmentService, UploadService, $uibModal, $log, $anchorScroll, $location, $route) {
         //SPA scrolling to different location
@@ -558,14 +576,6 @@ myApp.controller('apartmentController', ['$scope', 'ApartmentService', 'UploadSe
                 formdata.append('files' + i, $scope.imagearray[i]);
             }
 
-            //for (var key in $scope.apt) {
-            //        console.log(formdata[key]);
-            //    if ($scope.apt[key] != undefined) {
-            //        formdata.append(key, $scope.apt[key]);
-            //    }
-            //
-            //}
-
             ApartmentService.postApartments(formdata).then(function (success) {
                 $scope.imagearray = [];
                 $scope.reset();
@@ -618,8 +628,6 @@ myApp.controller('apartmentController', ['$scope', 'ApartmentService', 'UploadSe
         $scope.uploadedFile = function (element) {
             $scope.$apply(function ($scope) {
                 $scope.files = element.files;
-
-                //  var files = $("#imagebox").get(0).files;
 
                 var target = $('#profile_img');
 
@@ -1145,8 +1153,6 @@ myApp.controller('adminListController', ['$scope', 'AdminService', 'ApartmentSer
 
 
     $scope.editapt = function (id) {
-
-        //Modal Start
 
         //Fetch edit Data
         //Change later on to AdminService from here on

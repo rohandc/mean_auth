@@ -14,11 +14,12 @@
                             <h1>Search for properties</h1>
                             <div class="row1">
                                 <input type="text" id="location"
-                                       placeholder="Where are you looking for your space? Try a city or post id.">
+                                       placeholder="Where are you looking for your space? Try a city or post id."
+                                       ng-model="searchtext">
                             </div>
                             <div class="row1">
 
-                                <select id="rentType">
+                                <select id="rentType" placeholder="Rental Type" ng-model="rentType">
                                     <option value="Type" disabled="disabled" selected="selected">Rental Type</option>
                                     <option value="House">House</option>
                                     <option value="Apartment">Apartment</option>
@@ -28,7 +29,7 @@
                                     </optgroup>
                                 </select>
 
-                                <select id="minPrice">
+                                <select id="minPrice" ng-model="minPrice">
                                     <option>Min Price</option>
                                     <option value="0">0</option>
                                     <option value="100">100$</option>
@@ -46,7 +47,7 @@
                                 </select>
 
 
-                                <select id="maxPrice">
+                                <select id="maxPrice" ng-model="maxPrice">
                                     <option>Max Price</option>
                                     <option value="0">0</option>
                                     <option value="100">100$</option>
@@ -60,15 +61,13 @@
                                     <option value="900">900$</option>
                                     <option value="1000">1000$</option>
                                     <option value=">1000">>1000$</option>
-
                                 </select>
 
 
                             </div>
                             <div class="row1">
-                                <select id="duration">
+                                <select id="duration" ng-model="duration">
                                     <option value="Type" disabled="disabled" selected="selected">Duration</option>
-
                                     <option value="<1hour">1 hour</option>
                                     <option value="<6hours"> 6 hours</option>
                                     <option value="1-7days">1-7 days</option>
@@ -77,22 +76,20 @@
 
                                 </select>
 
-                                <select id="rating">
-                                    <option value="Type" disabled="disabled" selected="selected">Rank</option>
+                                <select id="rating" ng-model="rating">
+                                    <option value="Type" disabled="disabled" selected="selected">Rating</option>
                                     <option value="1">1<</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
                                     <option value="4">4</option>
                                     <option value="5">5</option>
-                                    <option value="6">All</option>
-
                                 </select>
 
                             </div>
                             <div class="row1">
-                                <input type="button" value="Search" class="btnSearch" onclick="searchF();">
+                                <input type="submit" value="Search" class="btnSearch" ng-click="search()">
 
-                                <hr style="margin-top:40px;">
+                                <!--<hr style="margin-top:40px;">-->
                             </div>
                         </section>
                     </a>
@@ -132,9 +129,8 @@
                             <a href="#" title="Welcome to Rent My Space"><img width="660" height="370"
                                                                               src="partials/images/Index/1.jpg"
                                                                               class="alignleft post-image" alt="1"/></a>
-                            <h2 class="entry-title"><a href="#" title="Welcome to Rent My Space" rel="bookmark">Welcome
-                                to
-                                Bigg</a></h2>
+                            <h2 class="entry-title"><a href="#" title="Welcome to Rent My Space"
+                                                       rel="bookmark">Welcome </a></h2>
 
                             <div class="entry-content">
                                 <p>This is a little introduction to Bigg, the free website template that might look a
@@ -353,17 +349,14 @@
 
     </div>
 </div>
-<link href='https://fonts.googleapis.com/css?family=Volkhov' rel='stylesheet' type='text/css'>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/js/lightbox-plus-jquery.min.js"></script>
-<script src="https://cdn.rawgit.com/vast-engineering/jquery-popup-overlay/1.7.11/jquery.popupoverlay.js"></script>
-<link href="./css/style.css" rel="stylesheet"/>
+
+
 <script type="text/javascript">
     $(document).ready(function () {
         $('a.drpdown').click(function () {
                     $("section.search").addClass('animated bounceInDown');
                 }
         );
-
         $('li.bind').mouseleave(function () {
 
             $("section.search").removeClass('animated bounceInDown');

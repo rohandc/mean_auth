@@ -7,3 +7,4 @@ typings
 /*.log
 /*.xml
 /server/access.log
+access.log
