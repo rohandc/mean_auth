@@ -1,4 +1,4 @@
-var myApp = angular.module('myApp', ['ngRoute', 'ui.bootstrap', 'ngMessages', 'ngFileUpload']);
+var myApp = angular.module('myApp', ['ngRoute', 'ui.bootstrap', 'ngMessages', 'ngFileUpload', 'rzModule']);
 //Do Dependency Injection for plugins here
 
 

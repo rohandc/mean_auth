@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Search Results</title>
-
 </head>
 <body>
 <div>
@@ -22,7 +19,6 @@
                                        ng-model="searchtext">
                             </div>
                             <div class="row1">
-
                                 <select id="rentType" placeholder="Rental Type" ng-model="rentType">
                                     <option value="Type" disabled="disabled" selected="selected">Rental Type</option>
                                     <option value="House">House</option>
@@ -93,7 +89,7 @@
                             <div class="row1">
                                 <input type="submit" value="Search" class="btnSearch" ng-click="search()">
 
-                                <!--<hr style="margin-top:40px;">-->
+
                             </div>
                         </section>
                     </a>
@@ -122,15 +118,62 @@
         </nav>
     </header>
     <div id="content">
-        <section class="col-md-4" style="background-color: blue;">
-            <div style="height:100%;position: absolute;
-       top: 40px;       bottom: 20px;width: 100%; ">
-                test
+        <section class="col-md-3">
+
+            <h1>Filter Parameters</h1>
+            <div class="row1">
+                <input type="text" id="location"
+                       placeholder="Where are you looking for your space? Try a city or post id."
+                       ng-model="searchtext">
             </div>
+            <div class="row1">
+
+                <select id="rentType" placeholder="Rental Type" ng-model="rentType">
+                    <option value="Type" disabled="disabled" selected="selected">Rental Type</option>
+                    <option value="House">House</option>
+                    <option value="Apartment">Apartment</option>
+                    <option value="Room">Room</option>
+                    <option value="Garage">Garage</option>
+                    <option value="Storage">Storage</option>
+                    </optgroup>
+                </select>
+            </div>
+            <div class="row1">
+                <rzslider rz-slider-model="slider.minValue"
+                          rz-slider-high="slider.maxValue"
+                          rz-slider-options="slider.options">
+                </rzslider>
+            </div>
+
+            <div class="row1">
+                <select id="duration" ng-model="duration">
+                    <option value="Type" disabled="disabled" selected="selected">Duration</option>
+                    <option value="<1hour">1 hour</option>
+                    <option value="<6hours"> 6 hours</option>
+                    <option value="1-7days">1-7 days</option>
+                    <option value=">week">Week</option>
+                    <option value=">month">Month</option>
+
+                </select>
+
+                <select id="rating" ng-model="rating">
+                    <option value="Type" disabled="disabled" selected="selected">Rating</option>
+                    <option value="1">1<</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+
+            </div>
+            <div class="row1">
+                <input type="submit" value="Search" class="btn btn-primary btn-lg" ng-click="search()">
+            </div>
+
         </section>
-        <section class="col-md-8" style=" background-color: red;">
-            <div style="height:100%;">
-                test
+        <section class="col-md-9" style=" background-color: red;">
+            <div style="height:80%;">
+                <h3 ng-bind="results.duration"></h3>
             </div>
         </section>
     </div>

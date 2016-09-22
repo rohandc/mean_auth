@@ -136,7 +136,19 @@ myApp.controller('navbarController', ['$scope', '$location', 'AuthService', 'Sea
         }
     }]);
 
-myApp.controller('searchController', [function () {
+myApp.controller('searchController', ['$scope', function ($scope) {
+
+
+    $scope.slider = {
+        minValue: 100,
+        maxValue: 2000,
+        options: {
+            floor: 0,
+            ceil: 2000,
+            step: 1
+        }
+    };
+
 
 }]);
 
