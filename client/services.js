@@ -379,22 +379,33 @@ myApp.factory('AdminService', ['$q', '$http', '$location', function ($q, $http, 
 
 }]);
 
-myApp.factory('SearchService', ['$q', '$http', function ($q, $http) {
+myApp.factory('SearchService', ['$q', '$http', '$location', function ($q, $http, $location) {
     var promise = $q.defer();
     var search = {};
-    search.getLocalResults = function (data) {
+    search.results = {};
+
+    search.getRedirectResults = function (data) {
         $http({
             method: 'GET',
             url: '/user/search',
             params: data // Works to pass data to backend for search query
+        }).success(function (data) {
+            search.results = data;
+            promise.resolve(data);
+            $location.path('/search');
         })
-            .success(function (data) {
-                promise.resolve(data);
-            })
             .error(function () {
                 promise.reject();
             });
         return promise;
+
+    }
+    search.getLocalResults = function (data) {
+        return $http({
+            method: 'GET',
+            url: '/user/search',
+            params: data // Works to pass data to backend for search query
+        });
     }
     return search;
 }]);

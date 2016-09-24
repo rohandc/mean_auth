@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+        #flashcard {
+            width: 33%;
+            padding: 5px 10px 5px 10px;
+            border: 1px solid;
+        }
+
+        #flashcard span {
+            display: block;
+        }
+    </style>
 </head>
 <body>
 <div>
@@ -119,7 +130,6 @@
     </header>
     <div id="content">
         <section class="col-md-3">
-
             <h1>Filter Parameters</h1>
             <div class="row1">
                 <input type="text" id="location"
@@ -171,10 +181,25 @@
             </div>
 
         </section>
-        <section class="col-md-9" style=" background-color: red;">
-            <div style="height:80%;">
-                <h3 ng-bind="results.duration"></h3>
+        <section class=" col-md-9" style="border-left:2px solid crimson;">
+
+            <div id="flashcard" class="col-md-8 small-block-grid-3" ng-repeat="result in results">
+                <h2 ng-bind="result.author"></h2>
+                <span ng-bind="result.apartment_no"></span>
+                <span ng-bind="result.street_name"></span>
+                <span ng-bind="result.city"></span>
+                <span ng-bind="result.country"></span>
+                <span ng-bind="result.description"></span>
+                <span ng-bind="result.duration"></span>
+                <span ng-bind="result.name"></span>
+                <span ng-bind="result.occupants_no"></span>
+                <span ng-bind="result.postal_code"></span>
+                <span ng-bind="result.price"></span>
+                <span ng-bind="result.rank"></span>
+                <span ng-bind="result.rental_type"></span>
             </div>
+
+
         </section>
     </div>
 </div>

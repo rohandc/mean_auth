@@ -166,18 +166,20 @@ router.post('/profileUpdate', function (req, res) {
 router.get('/search', function (req, res) {
     var query = req.query;
     console.log(query);
-    var terms = query.searchText.split(' ');
-    var regexString = "";
 
-    for (var i = 0; i < terms.length; i++) {
-        regexString += terms[i];
-        if (i < terms.length - 1) regexString += '|';
+    if (Object.keys(query).length != 0) {
+        var terms = query.searchText.split(' ');
+        var regexString = "";
+
+        for (var i = 0; i < terms.length; i++) {
+            regexString += terms[i];
+            if (i < terms.length - 1) regexString += '|';
+        }
+
+        var re = new RegExp(regexString, 'ig');
+
     }
-
-    var re = new RegExp(regexString, 'ig');
-
-
-    Apartment.find(/*{
+    /*{
      $or: [{
      rank: parseInt(query.rating),
      rental_type: query.rentType,
@@ -189,7 +191,9 @@ router.get('/search', function (req, res) {
      country:re,
      postal_code:re
      }]
-     },*/ function (err, apt) {
+     },*/
+
+    Apartment.find(function (err, apt) {
         if (err)
             console.log(err);
 

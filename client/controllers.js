@@ -131,14 +131,17 @@ myApp.controller('navbarController', ['$scope', '$location', 'AuthService', 'Sea
             query.maxPrice = $scope.maxPrice || 2000;
             query.duration = $scope.duration || 24;
             query.rating = $scope.rating || 5;
-            SearchService.getLocalResults(query);
+            SearchService.getRedirectResults(query);
 
         }
     }]);
 
-myApp.controller('searchController', ['$scope', function ($scope) {
-
-
+myApp.controller('searchController', ['$scope', 'SearchService', function ($scope, SearchService) {
+    SearchService.getLocalResults(null)
+        .success(function (results) {
+            $scope.results = results;
+        });
+    $scope.results = SearchService.results;
     $scope.slider = {
         minValue: 100,
         maxValue: 2000,
