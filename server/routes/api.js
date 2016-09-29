@@ -10,6 +10,7 @@
 "use strict";
 //Dependencies
 var express = require('express'),
+    Q = require('q'),
     router = express.Router(),
     passport = require('passport'),
     User = require('../models/user.js'),//Model for User registeration
@@ -165,7 +166,6 @@ router.post('/profileUpdate', function (req, res) {
 
 router.get('/search', function (req, res) {
     var query = req.query;
-    console.log(query);
 
     if (Object.keys(query).length != 0) {
         var terms = query.searchText.split(' ');
@@ -193,16 +193,48 @@ router.get('/search', function (req, res) {
      }]
      },*/
 
-    Apartment.find(function (err, apt) {
-        if (err)
-            console.log(err);
+    Apartment.find().lean().exec(function (err, collection) {
 
-        res.send(apt);
+            /*
+             var newCollection = [];
+             Object.keys(collection).forEach(function (document) {
 
-    });
 
+             (function (document, collection) {
+             debugger;
+             var current;
+             if (collection[document].files != undefined ||
+             collection[document].files != "") {
+             current = collection[document].files;
+             }
+             else if (collection[document].picture != undefined ||
+             collection[document].picture != ""
+             ) {
+             current = collection[document].picture
+             }
+             if (current != undefined) {
+
+             custom.prototype.readfromDB(current, function (err, store) {
+             if (err)
+             console.log('get file error ===============');
+
+             collection[document].store = store;
+             console.log(collection[document]);
+             });
+             }
+             newCollection.push(collection[document]);
+             if (parseInt(document) == collection.length - 1) {
+             res.send(newCollection);
+             }
+
+
+             })(document, collection);
+
+
+             });*/
+        }
+    );
 });
-
 
 //Routes for Apartments
 
@@ -278,7 +310,6 @@ router.get('/getApt/:id', function (req, res) {
 
 
     var apartment;
-    var imageObject = [];
 
     Apartment.findOne({_id: req.params.id}).lean().stream()
         .on("error", function (error) {
@@ -401,9 +432,6 @@ router.get('/id/:_id',
         }, function callback(err, apt) {
             if (err)
                 console.log(err);
-            // res.send(err);
-            // debugger;
-            // console.log(apt);
 
             res.send(post);
 
