@@ -141,7 +141,7 @@ myApp.controller('searchController', ['$scope', 'SearchService', function ($scop
         .success(function (results) {
             $scope.results = results;
         });
-    $scope.results = SearchService.results;
+    // $scope.results = SearchService.results;
     $scope.slider = {
         minValue: 100,
         maxValue: 2000,

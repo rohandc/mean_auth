@@ -127,6 +127,45 @@ var custom = function () {
 
     }
 
+    custom.prototype.readAllFromDB = function (file_id, callback) {
+
+        var files_arr = [];
+        var collection = mongoose.connection.db.collection("image.files");
+        collection.find({'metadata': file_id})
+            .toArray(function (err, files) {
+                if (err)
+                    callback(err, null)
+
+
+                files.forEach(function (file) {
+                    var element = {};
+                    element.id = file._id;
+                    element.name = file.filename;
+
+                    var date = new Date();
+                    var file_name = __dirname + "/../client/partials/images/uploads/" + file.filename;
+                    files_arr.push(element);
+                    var writestream = fs.createWriteStream(file_name);
+                    var gridstore = new GridStore(mongoose.connection.db, file._id, "r", {root: 'image'});
+                    gridstore.open(function (err, gridobj) {
+                        if (err)
+                            console.log(err);
+                        var readstream = gridobj.stream(true);
+                        readstream.on('end', function () {
+                            console.log("End Called");
+                        })
+                        readstream.pipe(writestream);
+                    })
+
+
+                })
+
+                callback(null, files_arr);
+            });
+
+
+    }
+
 
     custom.prototype.deletefromDB = function (file, cb) {
         var db = mongoose.connection.db;
@@ -178,6 +217,8 @@ var custom = function () {
          });*/
 
     }
+
+
 }
 
 module.exports = custom;
