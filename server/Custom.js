@@ -1,6 +1,7 @@
 var custom = function () {
 
     mongoose = require('mongoose');
+    Q = require('q');
     GridStore = mongoose.mongo.GridStore;
     Grid = require('gridfs-stream');
     fs = require('fs');
@@ -127,45 +128,72 @@ var custom = function () {
 
     }
 
-    custom.prototype.readAllFromDB = function (file_id, callback) {
-
-        var files_arr = [];
+    custom.prototype.readAllFromDB = function (file_collection) {
+        var deferred = Q.defer();
         var collection = mongoose.connection.db.collection("image.files");
-        collection.find({'metadata': file_id})
-            .toArray(function (err, files) {
-                if (err)
-                    callback(err, null)
+        Object.keys(file_collection).forEach(function (document) {
+            var current = null;
+            var files_arr = [];
+            if (file_collection[document].files != undefined ||
+                file_collection[document].files != "") {
+                current = file_collection[document].files;
+            }
+            else if (file_collection[document].picture != undefined ||
+                file_collection[document].picture != ""
+            ) {
+                current = file_collection[document].picture
+            }
+            collection.find({'metadata': current})
+                .toArray(function (err, files) {
+                    if (err)
+                        deferred.reject(err);
+                    custom.prototype.readfiles(files)
+                        .then(function (files_array) {
+                            file_collection[document].store = files_array;
+                            if (parseInt(document) == file_collection.length - 1) {
+                                deferred.resolve(file_collection);
+                            }
+
+                        });
+                });
 
 
-                files.forEach(function (file) {
-                    var element = {};
-                    element.id = file._id;
-                    element.name = file.filename;
-
-                    var date = new Date();
-                    var file_name = __dirname + "/../client/partials/images/uploads/" + file.filename;
-                    files_arr.push(element);
-                    var writestream = fs.createWriteStream(file_name);
-                    var gridstore = new GridStore(mongoose.connection.db, file._id, "r", {root: 'image'});
-                    gridstore.open(function (err, gridobj) {
-                        if (err)
-                            console.log(err);
-                        var readstream = gridobj.stream(true);
-                        readstream.on('end', function () {
-                            console.log("End Called");
-                        })
-                        readstream.pipe(writestream);
-                    })
-
-
-                })
-
-                callback(null, files_arr);
-            });
-
-
+        });
+        return deferred.promise;
     }
 
+    custom.prototype.readfiles = function (files) {
+        var deferred = Q.defer();
+        var files_arr = [];
+        if (files.length == 0) {
+            deferred.resolve(null);
+            return deferred.promise;
+        }
+
+        Object.keys(files).forEach(function (key) {
+
+            var file_name = __dirname + "/../client/partials/images/uploads/" + files[key].filename;
+            var writestream = fs.createWriteStream(file_name);
+            var gridstore = new GridStore(mongoose.connection.db, files[key]._id, "r", {root: 'image'});
+            gridstore.open(function (err, gridobj) {
+                if (err)
+                    deferred.reject(err);
+
+                var readstream = gridobj.stream(true);
+                readstream.on('end', function () {
+                    console.log("End Called");
+                })
+                readstream.pipe(writestream);
+            });
+            var element = {};
+            element.id = files[key]._id;
+            element.name = files[key].filename;
+            files_arr.push(element);
+
+        });
+        deferred.resolve(files_arr);
+        return deferred.promise;
+    }
 
     custom.prototype.deletefromDB = function (file, cb) {
         var db = mongoose.connection.db;

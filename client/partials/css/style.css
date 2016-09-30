@@ -645,3 +645,32 @@ h3 {
     font-weight: bold;
 }
 
+#flashcard {
+    width: 25%;
+    border: 1px solid;
+    height: 45%;
+    margin: 3em 1em 0em 6em;
+    text-align: center;
+    background-color: whitesmoke;
+}
+
+#flashcard span {
+    display: block;
+
+}
+
+.background {
+    background-color: #008A94;
+    background-image: url("../images/uploads/images.jpg ");
+    background-size: cover;
+    color: white;
+    height: 40%;
+}
+
+.background span, .background h1 {
+    padding-top: 10%;
+}
+
+.background2 {
+    padding: 10%;
+}

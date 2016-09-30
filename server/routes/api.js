@@ -195,43 +195,10 @@ router.get('/search', function (req, res) {
 
     Apartment.find().lean().exec(function (err, collection) {
 
-            /*
-             var newCollection = [];
-             Object.keys(collection).forEach(function (document) {
-
-
-             (function (document, collection) {
-             debugger;
-             var current;
-             if (collection[document].files != undefined ||
-             collection[document].files != "") {
-             current = collection[document].files;
-             }
-             else if (collection[document].picture != undefined ||
-             collection[document].picture != ""
-             ) {
-             current = collection[document].picture
-             }
-             if (current != undefined) {
-
-             custom.prototype.readfromDB(current, function (err, store) {
-             if (err)
-             console.log('get file error ===============');
-
-             collection[document].store = store;
-             console.log(collection[document]);
-             });
-             }
-             newCollection.push(collection[document]);
-             if (parseInt(document) == collection.length - 1) {
-             res.send(newCollection);
-             }
-
-
-             })(document, collection);
-
-
-             });*/
+        custom.prototype.readAllFromDB(collection)
+            .then(function (file_collection) {
+                res.send(file_collection);
+            });
         }
     );
 });
