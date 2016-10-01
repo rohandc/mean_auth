@@ -654,14 +654,13 @@ h3 {
     background-color: whitesmoke;
 }
 
-#flashcard span {
-    display: block;
+/*#flashcard span {*/
+/*display: block;*/
 
-}
+/*}*/
 
 .background {
     background-color: #008A94;
-    background-image: url("../images/uploads/images.jpg ");
     background-size: cover;
     color: white;
     height: 40%;
@@ -672,5 +671,6 @@ h3 {
 }
 
 .background2 {
-    padding: 10%;
+    padding: 15%;
+
 }

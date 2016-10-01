@@ -175,18 +175,38 @@
             <div id="flashcard" style="padding-left: 0;padding-right:0" class="col-md-8 small-block-grid-3"
                  ng-repeat="result in results">
                 <div class="background">
-                    <span class="h1" style="margin:0;padding-top:15px" ng-bind="result.author"></span>
-                    <span ng-bind="result.name"></span>
+                    <div uib-carousel active="active" interval="myInterval" no-wrap="noWrapSlides">
+                        <div uib-slide ng-repeat="slide in slides track by slide.id" index="slide.id">
+                            <img ng-src="{{slide.image}}">
+                            <div class="carousel-caption">
+                                <h4>Slide {{slide.id}}</h4>
+                                <p>{{slide.text}}</p>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <span ng-bind="result.store"></span>
+
                 </div>
                 <div class="background2">
-                    <span>Address :</span> <span ng-bind="result.address"></span>
-                    <span>Rank :</span> <span ng-bind="result.rank"></span>
-                    <!--<span ng-bind="result.description"></span>-->
-                    <!--<span ng-bind="result.duration"></span>-->
-                    <!--<span ng-bind="result.occupants_no"></span>-->
-                    <!--<span ng-bind="result.price"></span>-->
+                    <div class="list-group-item">
+                        <span>Posted By</span>
+                        <span ng-bind="result.author"></span>
+                    </div>
+                    <div class="list-group-item">
+                        <span>Rental Name</span>
+                        <span ng-bind="result.name"></span>
+                    </div>
+                    <div class="list-group-item">
+                        <span>Address :</span>
+                        <span ng-bind="result.apartment_no + ',' + result.street_name + ',' + result.city + ',' + result.country + ' ,'+ result.postal_code"></span>
+                    </div>
+                    <div class="list-group-item">
+                        <span>Rank :</span>
+                        <span ng-bind="result.rank"></span>
+                    </div>
 
-                    <!--<span ng-bind="result.rental_type"></span>-->
                 </div>
             </div>
 
