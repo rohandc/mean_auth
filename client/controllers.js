@@ -158,7 +158,9 @@ myApp.controller('searchController', ['$scope', 'SearchService', function ($scop
     var slides = $scope.slides = [];
     var currIndex = 0;
 
+
     $scope.addSlide = function () {
+
         var newWidth = 350 + slides.length + 1;
         slides.push({
             image: '//unsplash.it/' + newWidth + '/200',
@@ -208,11 +210,20 @@ myApp.controller('searchController', ['$scope', 'SearchService', function ($scop
         return array;
     }
 
+
+    // $scope.results = SearchService.results;
     SearchService.getLocalResults(null)
         .success(function (results) {
             $scope.results = results;
+            Object.keys(results).forEach(function (key) {
+
+                if (results[key].store == null) {
+                    console.log(slides);
+                }
+
+            });
         });
-    // $scope.results = SearchService.results;
+    //Left Side min max slider
     $scope.slider = {
         minValue: 100,
         maxValue: 2000,
@@ -222,6 +233,8 @@ myApp.controller('searchController', ['$scope', 'SearchService', function ($scop
             step: 1
         }
     };
+
+
 }]);
 
 

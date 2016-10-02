@@ -191,18 +191,22 @@
                 </div>
                 <div class="background2">
                     <div class="list-group-item">
-                        <span>Posted By</span>
+                        <span class="glyphicon glyphicon-user"></span>
+                        <span>Posted By :</span>
                         <span ng-bind="result.author"></span>
                     </div>
                     <div class="list-group-item">
-                        <span>Rental Name</span>
+                        <span class="glyphicon glyphicon-home"></span>
+                        <span>Rental Name :</span>
                         <span ng-bind="result.name"></span>
                     </div>
                     <div class="list-group-item">
+                        <span class="glyphicon glyphicon-road"></span>
                         <span>Address :</span>
                         <span ng-bind="result.apartment_no + ',' + result.street_name + ',' + result.city + ',' + result.country + ' ,'+ result.postal_code"></span>
                     </div>
                     <div class="list-group-item">
+                        <span class="glyphicon glyphicon-signal"></span>
                         <span>Rank :</span>
                         <span ng-bind="result.rank"></span>
                     </div>

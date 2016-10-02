@@ -648,7 +648,7 @@ h3 {
 #flashcard {
     width: 25%;
     border: 1px solid;
-    height: 45%;
+    height: 40%;
     margin: 3em 1em 0em 6em;
     text-align: center;
     background-color: whitesmoke;
@@ -671,6 +671,11 @@ h3 {
 }
 
 .background2 {
-    padding: 15%;
+    padding-top: 14%;
+    text-align: left;
 
+}
+
+.background2 .list-group-item span {
+    padding: 5px;
 }
