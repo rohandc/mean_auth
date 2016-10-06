@@ -8,7 +8,6 @@ angular.module('myApp').controller('loginController',
         function ($scope, $location, AuthService) {
 
 
-         
             $scope.login = function () {
 
                 // initial values
@@ -148,80 +147,70 @@ myApp.directive('backImg', function () {
 
 myApp.controller('searchController', ['$scope', 'SearchService', function ($scope, SearchService) {
 
-
-
     // Test Bootstrap Slider
-
     $scope.myInterval = 5000;
     $scope.noWrapSlides = false;
     $scope.active = 0;
-    var slides = $scope.slides = [];
+    $scope.results = [];
+    var slides = $scope.results.slides = [];
     var currIndex = 0;
 
-
     $scope.addSlide = function () {
-
         var newWidth = 350 + slides.length + 1;
         slides.push({
-            image: '//unsplash.it/' + newWidth + '/200',
+            image: '//unsplash.it/' + newWidth + '/300',
             text: ['Nice image', 'Awesome photograph', 'That is so cool', 'I love that'][slides.length % 4],
             id: currIndex++
         });
-    };
-
-    $scope.randomize = function () {
-        var indexes = generateIndexesArray();
-        assignNewIndexesToSlides(indexes);
     };
 
     for (var i = 0; i < 4; i++) {
         $scope.addSlide();
     }
 
-    // Randomize logic below
-
-    function assignNewIndexesToSlides(indexes) {
-        for (var i = 0, l = slides.length; i < l; i++) {
-            slides[i].id = indexes.pop();
+    function pushImages(arrObj) {
+        for (var i = 0; i < 4; i++) {
+            var newWidth = 350 + arrObj.length + 1;
+            arrObj.push({
+                name: '//unsplash.it/' + newWidth + '/300',
+                text: ['Nice image', 'Awesome photograph', 'That is so cool', 'I love that'][arrObj.length % 4],
+                id: currIndex++
+            });
+            ;
         }
     }
 
-    function generateIndexesArray() {
-        var indexes = [];
-        for (var i = 0; i < currIndex; ++i) {
-            indexes[i] = i;
-        }
-        return shuffle(indexes);
+    //End of Test Bootstrap SLider
+
+
+    $scope.getImageUrl = function (storeUrl, extUrl) {
+        var imgUrl;
+        if (storeUrl == null || storeUrl == undefined)
+            imgUrl = extUrl;
+        else
+            imgUrl = "./partials/images/uploads/" + storeUrl;
+
+        return imgUrl;
     }
-
-    // http://stackoverflow.com/questions/962802#962890
-    function shuffle(array) {
-        var tmp, current, top = array.length;
-
-        if (top) {
-            while (--top) {
-                current = Math.floor(Math.random() * (top + 1));
-                tmp = array[current];
-                array[current] = array[top];
-                array[top] = tmp;
-            }
-        }
-
-        return array;
-    }
-
 
     // $scope.results = SearchService.results;
     SearchService.getLocalResults(null)
         .success(function (results) {
-            $scope.results = results;
             Object.keys(results).forEach(function (key) {
-
-                if (results[key].store == null) {
-                    console.log(slides);
+                if (results[key].slides == null || results[key].slides == undefined) {
+                    results[key].slides = [];
+                    results[key].slides.active = false;
+                    pushImages(results[key].slides);
                 }
-
+                else {
+                    var cur_slide = results[key].slides;
+                    Object.keys(cur_slide).forEach(function (ckey) {
+                        cur_slide[ckey].name = "/images/uploads/" + cur_slide[ckey].name;
+                        cur_slide[ckey].active = false
+                    });
+                }
             });
+            $scope.results = results;
         });
     //Left Side min max slider
     $scope.slider = {

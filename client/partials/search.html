@@ -172,22 +172,19 @@
         </section>
         <section class=" col-md-9" style="border-left:2px solid crimson;">
 
+
             <div id="flashcard" style="padding-left: 0;padding-right:0" class="col-md-8 small-block-grid-3"
-                 ng-repeat="result in results">
-                <div class="background">
+                 ng-repeat="result in results track by result._id">
+                <div class="background" id="slides_control">
                     <div uib-carousel active="active" interval="myInterval" no-wrap="noWrapSlides">
-                        <div uib-slide ng-repeat="slide in slides track by slide.id" index="slide.id">
-                            <img ng-src="{{slide.image}}">
+                        <div uib-slide ng-repeat="slide in result.slides track by $index" index="$index">
+                            <img ng-src="{{slide.name}}" style="margin:auto;width:350px;height:200px;">
                             <div class="carousel-caption">
                                 <h4>Slide {{slide.id}}</h4>
                                 <p>{{slide.text}}</p>
                             </div>
                         </div>
                     </div>
-
-
-                    <span ng-bind="result.store"></span>
-
                 </div>
                 <div class="background2">
                     <div class="list-group-item">
@@ -213,8 +210,6 @@
 
                 </div>
             </div>
-
-
         </section>
     </div>
 </div>

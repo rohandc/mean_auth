@@ -648,7 +648,7 @@ h3 {
 #flashcard {
     width: 25%;
     border: 1px solid;
-    height: 40%;
+    height: auto; /* 40%*/
     margin: 3em 1em 0em 6em;
     text-align: center;
     background-color: whitesmoke;
@@ -663,7 +663,7 @@ h3 {
     background-color: #008A94;
     background-size: cover;
     color: white;
-    height: 40%;
+    height: auto /*40%;*/
 }
 
 .background span, .background h1 {
@@ -671,7 +671,7 @@ h3 {
 }
 
 .background2 {
-    padding-top: 14%;
+    padding-top: auto; /*14%;*/
     text-align: left;
 
 }

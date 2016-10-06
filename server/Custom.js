@@ -149,7 +149,7 @@ var custom = function () {
                         deferred.reject(err);
                     custom.prototype.readfiles(files)
                         .then(function (files_array) {
-                            file_collection[document].store = files_array;
+                            file_collection[document].slides = files_array;
                             if (parseInt(document) == file_collection.length - 1) {
                                 deferred.resolve(file_collection);
                             }
