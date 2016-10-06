@@ -8,3 +8,4 @@ typings
 /*.xml
 /server/access.log
 access.log
+/client/partials/images/uploads/*

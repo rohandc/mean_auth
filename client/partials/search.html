@@ -88,8 +88,6 @@
                             </div>
                             <div class="row1">
                                 <input type="submit" value="Search" class="btnSearch" ng-click="search()">
-
-
                             </div>
                         </section>
                     </a>
@@ -128,7 +126,7 @@
             <div class="row1">
 
                 <select id="rentType" placeholder="Rental Type" ng-model="rentType">
-                    <option value="Type" disabled="disabled" selected="selected">Rental Type</option>
+                    <option value="" disabled="disabled" selected>Rental Type</option>
                     <option value="House">House</option>
                     <option value="Apartment">Apartment</option>
                     <option value="Room">Room</option>
@@ -146,7 +144,7 @@
 
             <div class="row1">
                 <select id="duration" ng-model="duration">
-                    <option value="Type" disabled="disabled" selected="selected">Duration</option>
+                    <option value="" disabled="disabled" selected>Duration</option>
                     <option value="<1hour">1 hour</option>
                     <option value="<6hours"> 6 hours</option>
                     <option value="1-7days">1-7 days</option>
@@ -154,9 +152,8 @@
                     <option value=">month">Month</option>
 
                 </select>
-
                 <select id="rating" ng-model="rating">
-                    <option value="Type" disabled="disabled" selected="selected">Rating</option>
+                    <option value="" disabled="disabled" selected="selected">Rating</option>
                     <option value="1">1<</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
@@ -175,13 +172,12 @@
 
             <div id="flashcard" style="padding-left: 0;padding-right:0" class="col-md-8 small-block-grid-3"
                  ng-repeat="result in results track by result._id">
-                <div class="background" id="slides_control">
-                    <div uib-carousel active="active" interval="myInterval" no-wrap="noWrapSlides">
+                <div class="background">
+                    <div uib-carousel active="result.id" interval="myInterval" no-wrap="noWrapSlides">
                         <div uib-slide ng-repeat="slide in result.slides track by $index" index="$index">
                             <img ng-src="{{slide.name}}" style="margin:auto;width:350px;height:200px;">
                             <div class="carousel-caption">
                                 <h4>Slide {{slide.id}}</h4>
-                                <p>{{slide.text}}</p>
                             </div>
                         </div>
                     </div>

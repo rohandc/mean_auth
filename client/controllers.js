@@ -147,10 +147,10 @@ myApp.directive('backImg', function () {
 
 myApp.controller('searchController', ['$scope', 'SearchService', function ($scope, SearchService) {
 
-    // Test Bootstrap Slider
+    // Bootstrap Carousel
     $scope.myInterval = 5000;
     $scope.noWrapSlides = false;
-    $scope.active = 0;
+    $scope.active = false;
     $scope.results = [];
     var slides = $scope.results.slides = [];
     var currIndex = 0;
@@ -163,11 +163,6 @@ myApp.controller('searchController', ['$scope', 'SearchService', function ($scop
             id: currIndex++
         });
     };
-
-    for (var i = 0; i < 4; i++) {
-        $scope.addSlide();
-    }
-
     function pushImages(arrObj) {
         for (var i = 0; i < 4; i++) {
             var newWidth = 350 + arrObj.length + 1;
@@ -180,18 +175,7 @@ myApp.controller('searchController', ['$scope', 'SearchService', function ($scop
         }
     }
 
-    //End of Test Bootstrap SLider
-
-
-    $scope.getImageUrl = function (storeUrl, extUrl) {
-        var imgUrl;
-        if (storeUrl == null || storeUrl == undefined)
-            imgUrl = extUrl;
-        else
-            imgUrl = "./partials/images/uploads/" + storeUrl;
-
-        return imgUrl;
-    }
+    //End of Bootstrap Carousel
 
     // $scope.results = SearchService.results;
     SearchService.getLocalResults(null)
@@ -201,6 +185,7 @@ myApp.controller('searchController', ['$scope', 'SearchService', function ($scop
                     results[key].slides = [];
                     results[key].slides.active = false;
                     pushImages(results[key].slides);
+                    currIndex = 0;
                 }
                 else {
                     var cur_slide = results[key].slides;

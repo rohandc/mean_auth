@@ -56,6 +56,33 @@ myApp.config(function ($routeProvider, $locationProvider) {
 
 });
 
+//Constants
+
+myApp.constant('searchParams', {
+    rentType: [
+        {id: 0, type: "House"},
+        {id: 1, type: "Apartment"},
+        {id: 2, type: "Room"},
+        {id: 3, type: "Garage"},
+        {id: 4, type: "Storage"}],
+    price: [
+        {id: 0, value: 100},
+        {id: 1, value: 200},
+        {id: 2, value: 300},
+        {id: 3, value: 400},
+        {id: 4, value: 500},
+        {id: 5, value: 600},
+        {id: 6, value: 700},
+        {id: 7, value: 800},
+        {id: 8, value: 900},
+        {id: 9, value: 1000},
+        {id: 10, value: 1500}
+    ],
+    rating: [1, 2, 3, 4, 5],
+
+
+})
+
 
 //tracking route session
 
